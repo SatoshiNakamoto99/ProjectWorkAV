@@ -62,4 +62,4 @@ This project is licensed under the [MIT License] - see the [LICENSE](LICENSE) fi
     - Nocerino Antonio - [GitHub](https://github.com/SatoshiNakamoto99)
     - Spinelli Gianluigi - [GitHub](https://github.com/givnlvigi)
     - Sara 
-    - Prisco
+    - Trotta Prisco - [GitHub](https://github.com/priscotrotta00)
