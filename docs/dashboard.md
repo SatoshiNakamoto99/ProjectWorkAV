@@ -36,7 +36,7 @@ The TrainerYolo class in the TrainVal.py script uses this configuration file to 
 To use this script, you can run the following command:
 
 ```bash
- python TrainVal.py --config config/your_config_file.yaml --mode train
+ python ./detection/TrainVal.py -cfg ./config/yolov8n_mot_ch.yaml
 ```
 #### 💡 Future Improvements
 
@@ -51,7 +51,7 @@ The `TrainerYolo` class in the `TrainVal.py` script also supports validation. Th
 Here is how you can run the validation:
 
 ```bash
-python TrainVal.py --config config/your_config_file.yaml --mode validate
+python ./detection/TrainVal.py -cfg ./config/yolov8n_mot_ch.yaml -m validate
 ```
 
 ### Supported Pre-Trained Models 🤖
