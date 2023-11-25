@@ -18,7 +18,7 @@ Instructions on how to get a copy of the project up and running on your local ma
 A step-by-step guide on how to install the project.
 #### 1. Clone the repository
 ```bash
-git clone
+git clone https://github.com/SatoshiNakamoto99/ProjectWork.git
 cd ProjectWork
 ```
 #### 2. Create a conda environment
