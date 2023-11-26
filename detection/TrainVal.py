@@ -86,11 +86,14 @@ if __name__ == "__main__":
     if args.mode == "train":
         if cfg['cross_val']:
             ds_yamls = create_cross_validation_splits(Path(cfg['dataset_path']), Path(cfg['data']), ksplit=cfg['cross_val']['ksplit'], random_state=cfg['cross_val']['random_state'])
-            
+            results = {}
+            k = 1
             for ds_yaml in ds_yamls:
                 cfg['data']= ds_yaml
                 trainer = TrainerYolo(cfg)
                 trainer.train()
+                results[k] = trainer.metrics
+                k += 1
         else:
             trainer.train()
             pass

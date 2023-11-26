@@ -24,7 +24,15 @@ def create_cross_validation_splits(dataset_path, yaml_file, ksplit=5, random_sta
     """
     save_path = Path(dataset_path / f'K={ksplit}_rnd_state={random_state}-Fold_Cross-val')
     if not save_path.exists():
-        labels = sorted(dataset_path.rglob("*labels/*.txt"))
+        # Training labels
+        training_path = dataset_path / 'train'
+        val_path = dataset_path / 'val'                                     
+        labels = sorted(training_path.rglob("labels/*.txt"))
+
+        # Validation labels
+        labels.extend(sorted(val_path.rglob("labels/*.txt")))
+
+        
 
         with open(yaml_file, 'r', encoding="utf8") as y:
             classes = yaml.safe_load(y)['names']
@@ -69,7 +77,8 @@ def create_cross_validation_splits(dataset_path, yaml_file, ksplit=5, random_sta
         images = []
 
         for ext in supported_extensions:
-            images.extend(sorted(dataset_path.rglob(f"*images/*{ext}")))
+            images.extend(sorted(training_path.rglob(f"images/*{ext}")))
+            images.extend(sorted(val_path.rglob(f"images/*{ext}")))
             #.rglob("*labels/*.txt")
 
         
