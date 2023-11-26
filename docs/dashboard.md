@@ -1,4 +1,4 @@
-##  Training and Validation🏋️‍♀️
+##  Training 🏋️‍♀️
 ###  Training a Model with Configuration File🚀
 
 To train a model, you need to create a configuration file in the `config` folder. This file will contain all the necessary parameters for training. Here is an example of what this file might look like:
@@ -38,10 +38,108 @@ To use this script, you can run the following command:
 ```bash
  python ./detection/TrainVal.py -cfg ./config/yolov8n_mot_ch.yaml
 ```
-#### 💡 Future Improvements
+### Cross Validation 🔄
 
-This current version for training a model is still naive and straightforward. In the near future, we plan to add the ability to perform K-Fold Cross Validation during training. This technique will help to ensure that our model does not overfit the training data and can generalize well to unseen data. Stay tuned for this exciting update!
+Cross-validation is a potent preventive measure against overfitting. Here are the main advantages of cross-validation, each with its own set of benefits:
 
+- **Model Validation 📊:** Cross-validation provides insights into how well the model performs on an independent dataset, helping estimate the accuracy of the model.
+
+- **Bias-Variance Tradeoff ⚖️:** It aids in estimating the model's skill on new data. More folds during cross-validation can reduce bias-related errors, yielding a less biased model. However, this might introduce higher variability.
+
+- **Hyperparameter Tuning 🛠️:** Cross-validation is highly useful in tuning a model's parameters. It helps find optimal parameters that result in the least validation error.
+
+- **Model Selection 🏆:** It assists in selecting the model that best fits the data. Different models can be trained, and the one with the best performance on the validation set can be chosen.
+
+- **Feature Selection 🤔:** Cross-validation helps identify which features contribute the most to predictions. This can be a valuable feature for dimensionality reduction.
+
+The implementation of this strategy is done using a configuration file like this:
+
+```yaml
+# Verbose during prediction
+verbose: False
+
+img_size: 640
+epochs: 50
+batch_size: 16
+
+# For training
+# Cross-validation parameters
+cross_val:
+  ksplit: 5  # Change this value as needed
+  random_state: 20  # Change this value as needed 
+
+mode: 'train'
+data: ".\\datasets\\all_data\\dataset.yaml"
+dataset_path: ".\\datasets\\all_data\\"
+output: "yolov8n_mot_ch"
+model: weights/yolov8n.pt
+resume: False
+
+```
+The TrainerYolo class in the TrainVal.py script uses this configuration file to check if the key `cross_val` is present. In this case, it initiates a cross-validation strategy.
+
+To use this script, you can run the following command:
+
+```bash
+ python ./detection/TrainVal.py -cfg ./config/yolov8_Cross_Val_mot_ch.yaml
+```
+
+#### Configuration Parameters📝
+
+Note that this is the list of all parameters that you can set in a configuration file for training, which will consequently update the TrainVal class:
+
+Key | Value | Description
+--- | --- | ---
+model | None | Path to the model file, e.g., `yolov8n.pt`, `yolov8n.yaml`
+data | None | Path to the data file, e.g., `coco128.yaml`
+epochs | 100 | Number of epochs to train for
+patience | 50 | Epochs to wait for no observable improvement for early stopping of training
+batch | 16 | Number of images per batch (-1 for AutoBatch)
+imgsz | 640 | Size of input images as an integer
+save | True | Save train checkpoints and predict results
+save_period | -1 | Save checkpoint every x epochs (disabled if less than 1)
+cache | False | `True/ram`, `disk`, or `False`. Use cache for data loading
+device | None | Device to run on, e.g., `cuda device=0` or `device=0,1,2,3` or `device=cpu`
+workers | 8 | Number of worker threads for data loading (per RANK if DDP)
+project | None | Project name
+name | None | Experiment name
+exist_ok | False | Whether to overwrite an existing experiment
+pretrained | True | `True` (bool) or a `str`. Whether to use a pretrained model (bool) or a model to load weights from (str)
+optimizer | 'auto' | Optimizer to use, choices=[`SGD`, `Adam`, `Adamax`, `AdamW`, `NAdam`, `RAdam`, `RMSProp`, `auto`]
+verbose | False | Whether to print verbose output
+seed | 0 | Random seed for reproducibility
+deterministic | True | Whether to enable deterministic mode
+single_cls | False | Train multi-class data as single-class
+rect | False | Rectangular training with each batch collated for minimum padding
+cos_lr | False | Use cosine learning rate scheduler
+close_mosaic | 10 | (int) Disable mosaic augmentation for final epochs (0 to disable)
+resume | False | Resume training from the last checkpoint
+amp | True | Automatic Mixed Precision (AMP) training, choices=[`True`, `False`]
+fraction | 1.0 | Dataset fraction to train on (default is 1.0, all images in the train set)
+profile | False | Profile ONNX and TensorRT speeds during training for loggers
+freeze | None | (int or list, optional) Freeze the first n layers, or freeze a list of layer indices during training
+lr0 | 0.01 | Initial learning rate (i.e., SGD=1E-2, Adam=1E-3)
+lrf | 0.01 | Final learning rate (`lr0 * lrf`)
+momentum | 0.937 | SGD momentum/Adam beta1
+weight_decay | 0.0005 | Optimizer weight decay 5e-4
+warmup_epochs | 3.0 | Warmup epochs (fractions are okay)
+warmup_momentum | 0.8 | Warmup initial momentum
+warmup_bias_lr | 0.1 | Warmup initial bias lr
+box | 7.5 | Box loss gain
+cls | 0.5 | Cls loss gain (scale with pixels)
+dfl | 1.5 | DFL loss gain
+pose | 12.0 | Pose loss gain (pose-only)
+kobj | 2.0 | Keypoint obj loss gain (pose-only)
+label_smoothing | 0.0 | Label smoothing (fraction)
+nbs | 64 | Nominal batch size
+overlap_mask | True | Masks should overlap during training (segment train only)
+mask_ratio | 4 | Mask downsample ratio (segment train only)
+dropout | 0.0 | Use dropout regularization (classify train only)
+val | True | Validate/test during training
+plots | False | Save plots and images during train/val
+
+[Docs](https://docs.ultralytics.com/modes/train/)
+## Validation ✅ 
 ###  Validation of a Model with Configuration File🎯
 
 Validation is an essential part of training a model. It allows us to evaluate the model's performance on a separate dataset that was not used during training, which gives us a better understanding of how the model will perform on unseen data.
@@ -53,8 +151,30 @@ Here is how you can run the validation:
 ```bash
 python ./detection/TrainVal.py -cfg ./config/yolov8n_mot_ch.yaml -m validate
 ```
+#### Configuration Parameters📝
 
-### Supported Pre-Trained Models 🤖
+Note that this is the list of all parameters that you can set in a configuration file for validation, which will consequently update the TrainVal class:
+
+Key | Value | Description
+--- | --- | ---
+data | None | Path to the data file, e.g., `coco128.yaml`
+imgsz | 640 | Size of input images as an integer
+batch | 16 | Number of images per batch (-1 for AutoBatch)
+save_json | False | Save results to JSON file
+save_hybrid | False | Save hybrid version of labels (labels + additional predictions)
+conf | 0.001 | Object confidence threshold for detection
+iou | 0.6 | Intersection over union (IoU) threshold for NMS
+max_det | 300 | Maximum number of detections per image
+half | True | Use half precision (FP16)
+device | None | Device to run on, e.g., `cuda device=0/1/2/3` or `device=cpu`
+dnn | False | Use OpenCV DNN for ONNX inference
+plots | False | Save plots and images during train/val
+rect | False | Rectangular val with each batch collated for minimum padding
+split | val | Dataset split to use for validation, e.g., 'val', 'test', or 'train'
+
+[Docs](https://docs.ultralytics.com/modes/val/)
+
+## Supported Pre-Trained Models 🤖
 
 | Model | YAML | Size (pixels) | mAPval 50-95 | Speed CPU ONNX (ms) | Speed A100 TensorRT (ms) | Params (M) | FLOPs (B) |
 |-------|------|---------------|--------------|---------------------|--------------------------|------------|-----------|
