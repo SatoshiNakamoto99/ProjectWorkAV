@@ -48,6 +48,12 @@ Note that if you don't have a GPU you can install a version fo CPU.
 ## Usage 📖
 Instructions on how to use the project or its features are described in [Prepare_dataset.md](./docs/prepare_dataset.md) and [QuickStart.md](./docs/dashboard.md)
 
+  Inserisco solo  il comando per provare da interfaccia web inferenza real time per la detection da video webcam e immagini, il codice è rozzo:
+
+```bash
+    streamlit run ./app/app.py 
+```
+
 ## Contributing 🤝
 Contributions are welcome! Feel free to fork the repository, make improvements, and submit pull requests. Please follow the Contributing Guidelines.
 
