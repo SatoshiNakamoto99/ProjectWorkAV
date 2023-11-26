@@ -1,6 +1,9 @@
+from utils import create_cross_validation_splits
 from ultralytics import YOLO
 import yaml
 import argparse
+
+from pathlib import Path
 
 class TrainerYolo():
     def __init__(self, cfg):
@@ -36,14 +39,25 @@ class TrainerYolo():
 
 if __name__ == "__main__":
     args = argparse.ArgumentParser()
-    args.add_argument("-cfg", "--config", type=str, default="config/yolov8x.yaml", help="path to model config file")
+    args.add_argument("-cfg", "--config", type=str, default="./config/yolov8x.yaml", help="path to model config file")
     args.add_argument("-m", "--mode", type=str, default="train", help="train or validate")
     args = args.parse_args()
 
     with open(args.config) as file:
         cfg = yaml.load(file, Loader=yaml.FullLoader)
     trainer = TrainerYolo(cfg)
+
     if args.mode == "train":
-        trainer.train()
+        if cfg['cross_val']:
+            ds_yamls = create_cross_validation_splits(Path(cfg['dataset_path']), Path(cfg['data']), ksplit=cfg['cross_val']['ksplit'], random_state=cfg['cross_val']['random_state'])
+            
+            for ds_yaml in ds_yamls:
+                cfg['data']= ds_yaml
+                trainer = TrainerYolo(cfg)
+                trainer.train()
+        else:
+            trainer.train()
+            pass
+
     elif args.mode == "validate":
         trainer.validate()

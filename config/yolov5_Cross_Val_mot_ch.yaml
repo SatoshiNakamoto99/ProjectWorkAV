@@ -1,0 +1,19 @@
+#Verbose during prediction
+verbose: False
+
+img_size: 720
+epochs: 50
+batch_size: 8   
+
+# for training
+# Cross-validation parameters
+cross_val:
+  ksplit: 10  # Change this value as needed
+  random_state: 20  # Change this value as needed 
+
+mode: 'train'
+data: ".\\datasets\\all_data\\dataset.yaml"
+dataset_path: ".\\datasets\\all_data\\"
+output: "yolov8n_mot_ch"
+model: weights/yolov5su.pt
+resume: False
