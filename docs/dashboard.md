@@ -84,7 +84,7 @@ To use this script, you can run the following command:
  python ./detection/TrainVal.py -cfg ./config/yolov8_Cross_Val_mot_ch.yaml
 ```
 
-#### Configuration Parameters📝
+### Configuration Parameters📝
 
 Note that this is the list of all parameters that you can set in a configuration file for training, which will consequently update the TrainVal class:
 
@@ -151,7 +151,7 @@ Here is how you can run the validation:
 ```bash
 python ./detection/TrainVal.py -cfg ./config/yolov8n_mot_ch.yaml -m validate
 ```
-#### Configuration Parameters📝
+### Configuration Parameters📝
 
 Note that this is the list of all parameters that you can set in a configuration file for validation, which will consequently update the TrainVal class:
 
