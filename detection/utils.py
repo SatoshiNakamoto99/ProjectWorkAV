@@ -10,6 +10,18 @@ from sklearn.model_selection import KFold
 from tqdm import tqdm
 
 def create_cross_validation_splits(dataset_path, yaml_file, ksplit=5, random_state=20):
+    """
+    Create k-fold cross-validation splits for a dataset.
+
+    Args:
+        dataset_path (str): Path to the dataset directory.
+        yaml_file (str): Path to the YAML file containing class names.
+        ksplit (int, optional): Number of splits for cross-validation. Defaults to 5.
+        random_state (int, optional): Random state for shuffling the dataset. Defaults to 20.
+
+    Returns:
+        list: List of paths to the created dataset YAML files.
+    """
     save_path = Path(dataset_path / f'K={ksplit}_rnd_state={random_state}-Fold_Cross-val')
     if not save_path.exists():
         labels = sorted(dataset_path.rglob("*labels/*.txt"))
