@@ -65,7 +65,7 @@ This project is licensed under the [MIT License] - see the [LICENSE](LICENSE) fi
 - This project was based on the work done in the [human_dettrack](https://github.com/vankhoa21991/human_dettrack) repository. We appreciate their contributions to the open-source community.
 
 - Group Member:
+    - Massaro Sara - [GitHub](https://github.com/saramassaro)
     - Nocerino Antonio - [GitHub](https://github.com/SatoshiNakamoto99)
     - Spinelli Gianluigi - [GitHub](https://github.com/givnlvigi)
-    - Sara 
     - Trotta Prisco - [GitHub](https://github.com/priscotrotta00)
