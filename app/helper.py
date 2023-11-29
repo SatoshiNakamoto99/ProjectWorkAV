@@ -42,7 +42,7 @@ def _display_detected_frames(conf, model, st_frame, image):
     image = cv2.resize(image, (720, int(720*(9/16))))
 
     # Predict the objects in the image using the YOLOv8 model
-    res = model.predict(image, conf=conf, classes=[0])
+    res = model.predict(image, conf=conf, classes=[0], device='cpu')
 
     # Plot the detected objects on the video frame
     res_plotted = res[0].plot()
@@ -113,19 +113,31 @@ def play_stored_video(conf, model):
     # Detect video objects when button is clicked
     if st.sidebar.button('Detect Video Objects'):
         try:
-            vid_cap = cv2.VideoCapture(
-                str(settings.VIDEOS_DICT.get(source_vid)))
+            vid_cap = cv2.VideoCapture(str(settings.VIDEOS_DICT.get(source_vid)))
             st_frame = st.empty()
+
+            # Get the frame rate of the video
+            fps = int(vid_cap.get(cv2.CAP_PROP_FPS))
+
+            # Specify the desired frame rate (e.g., process every other frame)
+            desired_frame_rate = fps 
+
+            frame_count = 0
+            #process_frame = False
+
             while (vid_cap.isOpened()):
                 success, image = vid_cap.read()
+
                 if success:
-                    _display_detected_frames(conf,
-                                             model,
-                                             st_frame,
-                                             image
-                                             )
+                    #if process_frame:
+                        #frame_count += 1
+
+                    # Process frames based on the desired frame rate
+                    if frame_count % desired_frame_rate == 0:
+                        _display_detected_frames(conf, model, st_frame, image)
+                    #process_frame = not process_frame
                 else:
                     vid_cap.release()
                     break
         except Exception as e:
-            st.sidebar.error("Error loading video: " + str(e))
+            st.sidebar.error(f"An error occurred: {e}")

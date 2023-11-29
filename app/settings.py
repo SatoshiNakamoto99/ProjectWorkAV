@@ -44,8 +44,8 @@ VIDEOS_DICT = {
 }
 
 # ML Model config
-MODEL_DIR = '.'
-DETECTION_MODEL = Path(MODEL_DIR) / 'yolov8n.pt'
+MODEL_DIR = './models'
+DETECTION_MODEL = Path(MODEL_DIR) / 'best_Kfod5_100epoc_base.pt'
 
 
 # Webcam
