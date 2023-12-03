@@ -39,7 +39,7 @@ The initial step entails the transformation of the MOT17 and CrowdHuman datasets
 
 
 ```bash
- python ./datasets/crowdhuman_to_coco.py --data_path ./datasets/CrowdHuman
+ python ./datasets/crowdhuman_to_coco.py --data_path ./datasets/CrowdHuman/
 ```
 ```bash
  python ./datasets/mot17_to_coco.py --data_path datasets/MOT17

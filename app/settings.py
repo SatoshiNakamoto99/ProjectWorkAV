@@ -39,13 +39,15 @@ DEFAULT_DETECT_IMAGE = IMAGES_DIR / 'test_image_pred.jpg'
 # Videos config
 VIDEO_DIR = ROOT / 'data'
 VIDEO_1_PATH = VIDEO_DIR /'video_a_caso.mp4'
+VIDEO_2_PATH = VIDEO_DIR / 'video_prisco.MOV'
 VIDEOS_DICT = {
     'video_elite': VIDEO_1_PATH,
+    'video_Atrio_Cues': VIDEO_2_PATH
 }
 
 # ML Model config
-MODEL_DIR = '.'
-DETECTION_MODEL = Path(MODEL_DIR) / 'yolov8n.pt'
+MODEL_DIR = './models'
+DETECTION_MODEL = Path(MODEL_DIR) / 'best_Kfod5_100epoc_base.pt'
 
 
 # Webcam

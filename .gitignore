@@ -2,7 +2,6 @@ all_data
 MOT17
 CrowdHuman
 /runs/detect
-yolov8n.pt
 /weights
 __pycache__
 /myenv

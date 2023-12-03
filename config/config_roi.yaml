@@ -1,0 +1,15 @@
+roi1:
+  top_left:
+    x: 0.1
+    y: 0.2
+  size:
+    width: 0.3
+    height: 0.4
+
+roi2:
+  top_left:
+    x: 0.6
+    y: 0.2
+  size:
+    width: 0.3
+    height: 0.4
