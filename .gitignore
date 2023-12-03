@@ -5,3 +5,4 @@ CrowdHuman
 yolov8n.pt
 /weights
 __pycache__
+/myenv

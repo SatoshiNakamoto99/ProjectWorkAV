@@ -9,7 +9,7 @@ batch_size: 16
 mode: 'train' # 'train' or 'train resume'
 data: "./datasets/CrowdHuman/yolo/dataset.yaml"
 output: "yolov8n_crowdhuman"
-model: weights/yolov8n.pt
+model: yolov8n.pt
 resume: False
 #model: "runs/detect/yolov8s_crowdhuman/weights/best.pt"
 
