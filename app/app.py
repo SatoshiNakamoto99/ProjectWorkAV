@@ -4,6 +4,8 @@ import PIL
 
 # External packages
 import streamlit as st
+import tkinter as tk
+from tkinter import filedialog
 
 # Local Modules
 import settings as settings
@@ -55,7 +57,8 @@ def main():
         source_vid = st.sidebar.selectbox(
         "Choose a video...", settings.VIDEOS_DICT.keys())
         if mode == 'Tracking':
-            config_path = st.sidebar.file_uploader("Select ROI Configuration File (YAML)", type=['yaml'])
+            #config_path = st.sidebar.file_uploader("Select ROI Configuration File (YAML)", type=['yaml'])
+            config_path = st.sidebar.file_uploader("Select ROI Configuration File (JSON)", type=['json'])
             if config_path:
                 roi_config = helper.load_roi_config(config_path)
                 st.sidebar.success("ROI Configuration Loaded!")
@@ -64,6 +67,7 @@ def main():
                 roi_config = None
             if st.sidebar.button('Tracking Video Objects'):
                 helper.play_stored_video(confidence, model, mode, source_vid, roi_config)
+                st.sidebar.success("Results succesfully saved!")
         else:
             if st.sidebar.button('Detect Video Objects'):
                 helper.play_stored_video(confidence, model, mode, source_vid)

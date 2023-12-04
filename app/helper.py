@@ -8,6 +8,14 @@ import yaml
 import PIL
 
 import yaml
+import json
+from math import ceil
+
+RED = (0,0,255)
+GREEN = (0,255,0)
+BLUE = (255,0,0)
+colors = {0:RED,1:BLUE,2:GREEN}
+
 
 def load_roi_config(config_file):
     """
@@ -23,12 +31,13 @@ def load_roi_config(config_file):
         None
 
     """
+    
     if config_file is not None:
         # Leggi i dati del file UploadedFile come stringa
         config_data = config_file.read()
-        
-        # Analizza i dati YAML
-        roi_config = yaml.safe_load(config_data)
+
+        # Convert the JSON string to a dictionary
+        roi_config = json.loads(config_data)
         
         return roi_config
     else:
@@ -79,7 +88,7 @@ def _display_detected_frames(conf, model, st_frame, image):
                    use_column_width=True
                    )
 
-def _display_tracking_frame(conf, model, st_frame, frame):
+def _display_tracking_frame(conf, model, st_frame, frame, rescaled_rois, cap, people):
     """
     Display the tracking results on the frame.
 
@@ -92,17 +101,43 @@ def _display_tracking_frame(conf, model, st_frame, frame):
     Returns:
     None
     """
+
+    x_roi1,y_roi1,w_roi1,h_roi1 = rescaled_rois[0]
+    x_roi2,y_roi2,w_roi2,h_roi2 = rescaled_rois[1]
+
+
     # Run model on tracking frame, persisting detection IDs
     results = model.track(frame, conf=conf, persist=True, classes=[0], device='cpu', tracker="bytetrack.yaml")
+
+    # Get the boxes and track IDs
+    boxes = results[0].boxes.xywh.cpu()
+    track_ids = results[0].boxes.id.int().cpu().tolist()
+
     # visulize the results on the frame
-    annoted_frame = results[0].plot()
+    annotated_frame = results[0].plot()
     # Display the annotated frame
-    st_frame.image(annoted_frame,
+
+    for box, track_id in zip(boxes, track_ids):
+        x, y, w, h = box
+
+        roi = get_roi_of_belonging(x,y,x_roi1,y_roi1,w_roi1,h_roi1,x_roi2,y_roi2,w_roi2,h_roi2)
+
+        # Disegna il bounding box con il colore appropriato
+        color = colors[roi]
+        cv2.rectangle(annotated_frame, (int(x - w / 2), int(y - h / 2)), (int(x + w / 2), int(y + h / 2)), color, 4)
+
+        get_roi_passages_and_persistence(cap, people, track_id, roi)
+
+    get_persitence_for_no_more_tracked_people(people,track_ids,cap)
+    last_time=cap.get(cv2.CAP_PROP_POS_MSEC)
+
+
+    st_frame.image(annotated_frame,
                    caption='Tracked Video',
                    channels="BGR",
                    use_column_width=True)
         
-def _display_video(source_vid, conf, model, mode="Detection"):
+def _display_video(source_vid, conf, model, roi_config=None, mode="Detection"):
     """
     Display video frames and perform object detection or tracking based on the specified mode.
 
@@ -112,29 +147,59 @@ def _display_video(source_vid, conf, model, mode="Detection"):
         model: The object detection or tracking model.
         mode (str, optional): The mode of operation. Can be "Detection" or "Tracking". Defaults to "Detection".
     """
+    people = {}    
+    last_time = 0
+    skip_frames = 5
+    frame_count = 0
+
     vid_cap = cv2.VideoCapture(str(settings.VIDEOS_DICT.get(source_vid)))
+    # Store the track history
     st_frame = st.empty()
 
     # Get the frame rate of the video
     fps = int(vid_cap.get(cv2.CAP_PROP_FPS))
 
     # Specify the desired frame rate (e.g., process every other frame)
-    desired_frame_rate = fps
-
-    frame_count = 0
+    #desired_frame_rate = ceil(2*fps/3)
+    #frame_count = 0
+    #toggle = False
+   
 
     while vid_cap.isOpened():
         success, image = vid_cap.read()
+        rescaled_rois=get_rescaled_rois(vid_cap,roi_config)
 
         if success:
-            if frame_count % desired_frame_rate == 0:
-                if mode == "Detection":
-                    _display_detected_frames(conf, model, st_frame, image)
-                elif mode == "Tracking":
-                    _display_tracking_frame(conf, model, st_frame, image)
+            #if toggle:
+              #  if frame_count < desired_frame_rate :
+                if frame_count % (skip_frames + 1) == 0:
+             #       frame_count= frame_count+1
+                    if mode == "Detection":
+                        _display_detected_frames(conf, model, st_frame, image)
+                    elif mode == "Tracking":
+                        _display_tracking_frame(conf, model, st_frame, image, rescaled_rois, vid_cap, people)
+           # toggle = not toggle
         else:
+            update_persistence(people,last_time)
+            save_tracking_results(people)
             vid_cap.release()
             break
+
+def get_rescaled_rois(vid_cap,roi_config):
+    width = int(vid_cap.get(cv2.CAP_PROP_FRAME_WIDTH))
+    height = int(vid_cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
+
+    rois = roi_config.values()
+    rescaled_rois = []
+
+    for roi in rois:
+        x = int(roi["x"] * width)
+        y = int(roi["y"] * height)
+        w = int(roi["w"] * width)
+        h = int(roi["h"] * height)
+        rescaled_rois.append((x,y,w,h))
+
+    return rescaled_rois
 
 def play_webcam(conf, model):
     """
@@ -245,7 +310,92 @@ def play_stored_video(conf, model, mode, source_vid, roi_config = None):
     # Detect video objects when button is clicked
     
     try:
-        _display_video(source_vid, conf, model, mode = mode)
+        results = _display_video(source_vid, conf, model, roi_config, mode = mode)
+        return results
     except Exception as e:
         st.sidebar.error(f"An error occurred: {e}")
     
+######################
+
+def get_roi_of_belonging(x,y,x_roi1,y_roi1,w_roi1,h_roi1,x_roi2,y_roi2,w_roi2,h_roi2):
+    # Verifica se il punto (x, y) appartiene a ROI1
+    if x_roi1 <= x <= x_roi1 + w_roi1 and y_roi1 <= y <= y_roi1 + h_roi1:
+        roi = 1
+    # Verifica se il punto (x, y) appartiene a ROI2
+    elif x_roi2 <= x <= x_roi2 + w_roi2 and y_roi2 <= y <= y_roi2 + h_roi2:
+        roi = 2
+    # Se il punto non appartiene a nessuna ROI, assegna il colore no_roi
+    else:
+        roi = 0
+    return roi
+
+
+def get_roi_passages_and_persistence(cap, people, track_id, roi):
+    if track_id not in people.keys():
+        if roi==1:
+            people[track_id] = {"roi1_passages":1,"roi1_persistence_time":0,"roi2_passages":0,"roi2_persistence_time":0,"prev_roi":roi,"start_persistence":0,"lost_tracking":False}
+        elif roi==2:
+            people[track_id] = {"roi1_passages":0,"roi1_persistence_time":0,"roi2_passages":1,"roi2_persistence_time":0,"prev_roi":roi,"start_persistence":0,"lost_tracking":False}
+        else:
+            people[track_id] = {"roi1_passages":0,"roi1_persistence_time":0,"roi2_passages":0,"roi2_persistence_time":0,"prev_roi":roi,"start_persistence":-1,"lost_tracking":False}
+    else:
+        if roi == 1 and (people[track_id]["prev_roi"] != 1 or people[track_id]["lost_tracking"]):
+            people[track_id]["roi1_passages"] = people[track_id]["roi1_passages"] + 1
+            people[track_id]["start_persistence"] = cap.get(cv2.CAP_PROP_POS_MSEC)
+        elif roi == 2 and (people[track_id]["prev_roi"] != 2 or people[track_id]["lost_tracking"]):
+            people[track_id]["roi2_passages"] = people[track_id]["roi2_passages"] + 1
+            people[track_id]["start_persistence"] = cap.get(cv2.CAP_PROP_POS_MSEC)
+        elif((roi != 1 and people[track_id]["prev_roi"] == 1) or (roi != 2 and people[track_id]["prev_roi"] == 2)):
+            stop_persistence = cap.get(cv2.CAP_PROP_POS_MSEC)
+            time_of_persistence=stop_persistence-people[track_id]["start_persistence"]
+            if people[track_id]["prev_roi"] == 1 and people[track_id]["roi1_persistence_time"] != -1:
+                people[track_id]["roi1_persistence_time"] = people[track_id]["roi1_persistence_time"]+time_of_persistence/1000.0
+                people[track_id]["start_persistence"] = -1
+            elif people[track_id]["prev_roi"] == 2 and people[track_id]["roi2_persistence_time"] != -1:
+                people[track_id]["roi2_persistence_time"] = people[track_id]["roi2_persistence_time"]+time_of_persistence/1000.0
+                people[track_id]["start_persistence"] = -1
+        
+    people[track_id]["prev_roi"] = roi
+    people[track_id]["lost_tracking"]=False
+
+
+def get_persitence_for_no_more_tracked_people(people,track_ids,cap):
+    for track_id in people.keys():
+        if track_id not in track_ids:
+            people[track_id]["lost_tracking"]=True
+            if people[track_id]["start_persistence"] != -1:
+                stop_persistence = cap.get(cv2.CAP_PROP_POS_MSEC)
+                print(stop_persistence)
+                time_of_persistence=stop_persistence-people[track_id]["start_persistence"]
+                if people[track_id]["prev_roi"] == 1:
+                    people[track_id]["roi1_persistence_time"] = people[track_id]["roi1_persistence_time"]+time_of_persistence/1000.0
+                elif people[track_id]["prev_roi"] == 2:
+                    people[track_id]["roi2_persistence_time"] = people[track_id]["roi2_persistence_time"]+time_of_persistence/1000.0
+                people[track_id]["start_persistence"] = -1
+
+
+def update_persistence(people,last_time):
+    for track_id in people.keys():
+        if people[track_id]["start_persistence"] != -1:
+            stop_persistence = last_time
+            time_of_persistence=stop_persistence-people[track_id]["start_persistence"]
+            if people[track_id]["prev_roi"] == 1:
+                people[track_id]["roi1_persistence_time"] = people[track_id]["roi1_persistence_time"]+time_of_persistence/1000.0
+                people[track_id]["start_persistence"] = -1
+            elif people[track_id]["prev_roi"] == 2:
+                people[track_id]["roi2_persistence_time"] = people[track_id]["roi2_persistence_time"]+time_of_persistence/1000.0
+                people[track_id]["start_persistence"] = -1
+
+
+def save_tracking_results(people):
+    filtered_people = []
+    for person_id, person in people.items():
+        filtered_people.append({"id": person_id, "roi1_passages": person["roi1_passages"],
+                                "roi1_persistence_time": ceil(person["roi1_persistence_time"]),
+                                "roi2_passages": person["roi2_passages"],
+                                "roi2_persistence_time": ceil(person["roi2_persistence_time"])})
+
+    data = {"people": filtered_people}
+
+    with open("results.json", 'w') as file:
+        json.dump(data, file, indent=2)
