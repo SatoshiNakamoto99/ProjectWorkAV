@@ -69,3 +69,14 @@ This project is licensed under the [MIT License] - see the [LICENSE](LICENSE) fi
     - Nocerino Antonio - [GitHub](https://github.com/SatoshiNakamoto99)
     - Spinelli Gianluigi - [GitHub](https://github.com/givnlvigi)
     - Trotta Prisco - [GitHub](https://github.com/priscotrotta00)
+
+
+## Tracking
+
+- How to run Trackers:
+  - Select your tracker mode in app/setting.py --> change MY_TRACKER 
+  - Move in the project root and type: python trackers/test_track.py 
+  - If you want, you can choose a lot o settings. Just for example: python trackers/test_track.py --source data/video_prisco_tagliato.mp4 --save-id-crops --save-mot
+
+test_my_yolo_class is a simple class that tests che correctness of MyYOLO class with the usage of our custom tracker mode.
+To change parameters of you favourite tracker mode, you can easily change theese in config/<your tracker mode>

@@ -52,3 +52,8 @@ DETECTION_MODEL = Path(MODEL_DIR) / 'yolov8n.pt'
 
 # Webcam
 WEBCAM_PATH = 0
+
+# TRACKING
+VID_FORMATS = 'asf', 'avi', 'gif', 'm4v', 'mkv', 'mov', 'mp4', 'mpeg', 'mpg', 'ts', 'wmv', 'webm'  # video suffixes
+CONFIG = ROOT / 'config'
+MY_TRACKER = CONFIG / 'botsort.yaml'
