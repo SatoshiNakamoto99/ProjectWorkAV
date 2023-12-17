@@ -5,3 +5,5 @@ CrowdHuman
 /weights
 __pycache__
 /myenv
+data/trackers
+model

@@ -3,10 +3,10 @@ from math import ceil
 from loaders import LoadVideoStream
 import cv2
 # Set the path to your video file
-video_path = 'C:\\VSCode_Project\\ArtificialVision\\Code\\ProjectWork\\data\\video_prisco_tagliato.mp4' 
+video_path = 'data/video_prisco_tagliato.mp4' 
 
 # Create a video stream loader
-stream_loader = LoadVideoStream(source=video_path)
+stream_loader = LoadVideoStream(source=video_path, fps_out=5)
 
 try:
     

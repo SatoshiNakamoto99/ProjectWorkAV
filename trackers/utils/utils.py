@@ -14,8 +14,9 @@ def write_mot_results(txt_path, results, frame_idx):
         frame_idx,
         results.boxes.id.unsqueeze(1).to('cpu'),
         ops.xyxy2ltwh(results.boxes.xyxy).to('cpu'),
-        results.boxes.conf.unsqueeze(1).to('cpu'),
-        results.boxes.cls.unsqueeze(1).to('cpu'),
+        results.boxes.cls.unsqueeze(1).to('cpu')+1,
+        dont_care,
+        dont_care,
         dont_care
     ], dim=1)
 
