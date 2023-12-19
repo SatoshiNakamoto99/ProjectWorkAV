@@ -36,7 +36,7 @@ def run(args):
     images = os.listdir(args.source)
     frame_idx=0
 
-    for img in tqdm(images,desc='       Processing ' + Path(subfolder).name):    
+    for img in tqdm(images,desc='Processing ' + Path(subfolder).name + ' with tracker ' + args.tracking_method):    
         
         frame = args.source + '/' + img
         results = yolo.track(
