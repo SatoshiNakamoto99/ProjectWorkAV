@@ -44,7 +44,6 @@ class BOTrack(STrack):
     def __init__(self, tlwh, score, cls, feat=None, feat_history=50, alpha=0.9):
         """Initialize YOLOv8 object with temporal parameters, such as feature history, alpha and current features."""
         super().__init__(tlwh, score, cls)
-
         self.smooth_feat = None
         self.curr_feat = None
         if feat is not None:

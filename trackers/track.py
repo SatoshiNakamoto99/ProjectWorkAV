@@ -32,7 +32,7 @@ def on_predict_start(predictor, persist=False):
     """
     if hasattr(predictor, 'trackers') and persist:
         return
-    tracker = check_yaml(MY_TRACKER)
+    tracker = check_yaml(predictor.args.tracker)
     cfg = IterableSimpleNamespace(**yaml_load(tracker))
     assert cfg.tracker_type in ['bytetrack', 'botsort'], \
         f"Only support 'bytetrack' and 'botsort' for now, but got '{cfg.tracker_type}'"
