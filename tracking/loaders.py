@@ -46,7 +46,8 @@ class LoadVideoStream:
                     im = np.zeros((0, 0, 3), dtype=np.uint8)
                     LOGGER.warning('WARNING ⚠️ Video stream unresponsive, please check your IP camera connection.')
                     self.cap.open(self.source)
-                self.imgs.append(im)
+                timestamp = self.cap.get(cv2.CAP_PROP_POS_MSEC)
+                self.imgs.append((im, timestamp))
 
     def close(self):
         self.running = False
@@ -74,7 +75,8 @@ class LoadVideoStream:
             if not self.imgs:
                 LOGGER.warning(f'WARNING ⚠️ Waiting for stream {self.source}')
 
-        images.append(self.imgs.pop(0))
+        img, timestamp = self.imgs.pop(0)
+        images.append((img, timestamp))
         return self.source, images, None, ''
 
     def __len__(self):

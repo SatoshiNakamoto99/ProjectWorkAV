@@ -1,0 +1,103 @@
+{
+  "people": [
+    {
+      "id": 1,
+      "upper_color": "gray",
+      "lower_color": "brown",
+      "roi1_passages": 3,
+      "roi1_persistence_time": 15,
+      "roi2_passages": 0,
+      "roi2_persistence_time": 0
+    },
+    {
+      "id": 2,
+      "upper_color": "black",
+      "lower_color": "black",
+      "roi1_passages": 0,
+      "roi1_persistence_time": 0,
+      "roi2_passages": 1,
+      "roi2_persistence_time": 2
+    },
+    {
+      "id": 3,
+      "upper_color": "brown",
+      "lower_color": "black",
+      "roi1_passages": 0,
+      "roi1_persistence_time": 0,
+      "roi2_passages": 0,
+      "roi2_persistence_time": 0
+    },
+    {
+      "id": 4,
+      "upper_color": "black",
+      "lower_color": "black",
+      "roi1_passages": 3,
+      "roi1_persistence_time": 31,
+      "roi2_passages": 0,
+      "roi2_persistence_time": 0
+    },
+    {
+      "id": 5,
+      "upper_color": "black",
+      "lower_color": "gray",
+      "roi1_passages": 0,
+      "roi1_persistence_time": 0,
+      "roi2_passages": 0,
+      "roi2_persistence_time": 0
+    },
+    {
+      "id": 6,
+      "upper_color": "black",
+      "lower_color": "black",
+      "roi1_passages": 1,
+      "roi1_persistence_time": 1,
+      "roi2_passages": 0,
+      "roi2_persistence_time": 0
+    },
+    {
+      "id": 8,
+      "upper_color": "black",
+      "lower_color": "black",
+      "roi1_passages": 1,
+      "roi1_persistence_time": 7,
+      "roi2_passages": 1,
+      "roi2_persistence_time": 1
+    },
+    {
+      "id": 11,
+      "upper_color": "black",
+      "lower_color": "black",
+      "roi1_passages": 1,
+      "roi1_persistence_time": 5,
+      "roi2_passages": 0,
+      "roi2_persistence_time": 0
+    },
+    {
+      "id": 12,
+      "upper_color": "black",
+      "lower_color": "black",
+      "roi1_passages": 1,
+      "roi1_persistence_time": 4,
+      "roi2_passages": 0,
+      "roi2_persistence_time": 0
+    },
+    {
+      "id": 16,
+      "upper_color": "black",
+      "lower_color": "black",
+      "roi1_passages": 1,
+      "roi1_persistence_time": 2,
+      "roi2_passages": 0,
+      "roi2_persistence_time": 0
+    },
+    {
+      "id": 23,
+      "upper_color": "black",
+      "lower_color": "gray",
+      "roi1_passages": 1,
+      "roi1_persistence_time": 6,
+      "roi2_passages": 0,
+      "roi2_persistence_time": 0
+    }
+  ]
+}

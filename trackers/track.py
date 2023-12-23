@@ -3,7 +3,9 @@
 import sys
 import os
 
-from app.settings import CONFIG, MY_TRACKER
+current_path = os.path.dirname(os.path.abspath(__file__))
+project_path = os.path.abspath(os.path.join(current_path, ".."))
+sys.path.append(project_path)
 
 from functools import partial
 from pathlib import Path

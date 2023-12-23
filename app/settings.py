@@ -47,7 +47,7 @@ VIDEOS_DICT = {
 
 # ML Model config
 MODEL_DIR = './models'
-DETECTION_MODEL = Path(MODEL_DIR) / 'yolov8n.pt'
+DETECTION_MODEL = Path(MODEL_DIR) / 'yolov8n-seg.pt'
 
 
 # Webcam

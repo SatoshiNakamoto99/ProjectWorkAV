@@ -6,7 +6,6 @@ current_path = os.path.dirname(os.path.abspath(__file__))
 project_path = os.path.abspath(os.path.join(current_path, ".."))
 sys.path.append(project_path)
 from my_yolo import MyYOLO
-from ultralytics import YOLO
 
 import torch
 from pathlib import Path
@@ -23,10 +22,11 @@ def run(args):
     yolo = MyYOLO(
         args.yolo_model if 'yolov8' in str(args.yolo_model) else 'yolov8n.pt',
     )
-
+    # Run YOLOv8 tracking on the frame, persisting tracks between frames
     results = yolo.track(
         source=args.source,
         conf=args.conf,
+        persist = True,
         iou=args.iou,
         show=args.show,
         stream=True,
@@ -45,10 +45,7 @@ def run(args):
         tracker = CONFIG / (str(args.tracking_method) + '.yaml')
     )
 
-    yolo.predictor.custom_args = args
-
     for frame_idx, r in enumerate(results):
-
         if r.boxes.data.shape[1] == 7:
 
             if yolo.predictor.source_type.webcam or args.source.endswith(VID_FORMATS):
@@ -67,6 +64,7 @@ def run(args):
 
             if args.save_id_crops:
                 for d in r.boxes:
+                    print('args.save_id_crops', d.data)
                     save_one_box(
                         d.xyxy,
                         r.orig_img.copy(),
@@ -80,7 +78,6 @@ def run(args):
 
     if args.save_mot:
         print(f'MOT results saved to {yolo.predictor.mot_txt_path}')
-    
 
 def parse_opt():
     parser = argparse.ArgumentParser()

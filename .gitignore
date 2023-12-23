@@ -1,9 +1,10 @@
 all_data
 MOT17
 CrowdHuman
-/runs/detect
+/runs
 /weights
 __pycache__
 /myenv
 data/trackers
 model
+results/
