@@ -43,6 +43,7 @@ def run(args):
         results = yolo.track(
             source=frame,
             conf=args.conf,
+            persist=True,
             iou=args.iou,
             show=args.show,
             stream=True,
@@ -64,11 +65,9 @@ def run(args):
         )
 
         # store custom args in predictor
-        #yolo.predictor.custom_args = args
-
         for key, value in args.__dict__.items():
-            if hasattr(yolo.predictor.args,key):
-                setattr(yolo.predictor.args,key,value)
+            if hasattr(yolo.predictor.args, key):
+                setattr(yolo.predictor.args, key, value)
 
         for _, r in enumerate(results):
 
@@ -85,18 +84,18 @@ def run(args):
                         frame_idx,
                     )
 
-                # if args.save_id_crops:
-                #     for d in r.boxes:
-                #         save_one_box(
-                #             d.xyxy,
-                #             r.orig_img.copy(),
-                #             file=(
-                #                 yolo.predictor.save_dir / 'crops' /
-                #                 str(int(d.cls.cpu().numpy().item())) /
-                #                 str(int(d.id.cpu().numpy().item())) / f'{frame_idx}.jpg'
-                #             ),
-                #             BGR=True
-                #         )
+                if args.save_id_crops:
+                    for d in r.boxes:
+                        save_one_box(
+                            d.xyxy,
+                            r.orig_img.copy(),
+                            file=(
+                                yolo.predictor.save_dir / 'crops' /
+                                str(int(d.cls.cpu().numpy().item())) /
+                                str(int(d.id.cpu().numpy().item())) / f'{frame_idx}.jpg'
+                            ),
+                            BGR=True
+                        )
         frame_idx = frame_idx+1
 
     if args.save_mot:
@@ -106,7 +105,7 @@ def run(args):
 
 def parse_opt():
     parser = argparse.ArgumentParser()
-    parser.add_argument('--yolo-model', type=Path, default='models/yolov8n',
+    parser.add_argument('--yolo-model', type=Path, default='models/yolov8n-seg.pt',
                         help='yolo model path')
     # parser.add_argument('--reid-model', type=Path, default=WEIGHTS / 'osnet_x0_25_msmt17.pt',
     #                     help='reid model path')

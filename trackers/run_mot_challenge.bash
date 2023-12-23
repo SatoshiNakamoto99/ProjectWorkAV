@@ -11,7 +11,7 @@ tracking_methods=('botsort' 'bytetrack')
 
 # Altri parametri fissi
 fixed_params=(
-    "--yolo-model" "models/yolov8n"
+    "--yolo-model" "models/yolov8n-seg.pt"
     "--imgsz" "640"  # Replace with your specific imgsz values
     "--conf" "0.5"
     "--iou" "0.7"

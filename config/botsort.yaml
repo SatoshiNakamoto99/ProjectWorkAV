@@ -15,6 +15,6 @@ non_maximum_iou_distance: 0.15 #0.15
 # BoT-SORT settings
 gmc_method: sparseOptFlow  # method of global motion compensation
 # ReID model related thresh (not supported yet)
-proximity_thresh: 0.5 #0.5
-appearance_thresh: 0.25 #0.25
-with_reid: False #false
+proximity_thresh: 0.5
+appearance_thresh: 0.25
+with_reid: False
