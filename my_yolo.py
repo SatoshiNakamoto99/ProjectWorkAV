@@ -1,7 +1,7 @@
 from ultralytics import YOLO
 
 class MyYOLO(YOLO):
-    def track(self, source=None, stream=False, persist=False, **kwargs):
+    def track(self, source=None, stream=False, persist=True, **kwargs):
         """
         Perform object tracking on the input source using the registered trackers.
 

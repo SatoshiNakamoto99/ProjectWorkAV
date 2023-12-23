@@ -1,6 +1,6 @@
 #!/bin/bash
 
-python_executable="/usr/bin/python3"  # Imposta il percorso corretto del tuo eseguibile Python3
+python_executable="python3"  # Imposta il percorso corretto del tuo eseguibile Python3
 
 # Percorso della cartella contenente le sottocartelle
 base_folder='datasets/MOT17/train'

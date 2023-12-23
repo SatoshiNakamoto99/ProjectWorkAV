@@ -7,17 +7,22 @@ import matplotlib.pyplot as plt
 from my_yolo import MyYOLO
 from ultralytics import YOLO
 
+
+from ultralytics.utils import ASSETS
+from ultralytics.models.yolo.segment import SegmentationPredictor
+
+
 from math import ceil
 from tracking.loaders import LoadVideoStream
 import cv2
 # Set the path to your video file
 video_path = 'data/video_prisco_tagliato.mp4' 
 # Load the YOLOv8 model
-detection_model = MyYOLO('models/yolov8n.pt')
-tracking_model = MyYOLO('models/yolov8n.pt')
+detection_model = MyYOLO('model/yolov8n.pt')
+tracking_model = MyYOLO('model/yolov8n.pt')
 
 # Create a video stream loader
-stream_loader = LoadVideoStream(source=video_path, fps_out=3)
+stream_loader = LoadVideoStream(source=video_path, fps_out=5)
 
 # Store the track history
 track_history = defaultdict(lambda: [])
@@ -41,8 +46,8 @@ try:
     for source, images, _, _ in stream_loader:
         frame = images[0]
 
-        detection_results = detection_model.predict(frame, conf=0.5, classes=[0], device='cpu')
-        tracking_results = tracking_model.track(frame, conf=0.5, persist=True, classes=[0], device='cpu', tracker="config/bytetrack.yaml")
+        detection_results = detection_model.predict(frame, conf=0.3, classes=[0], device='cpu')
+        tracking_results = tracking_model.track(frame, conf=0.3, persist=True, classes=[0], device='cpu', tracker="config/botsort.yaml")
 
         # Visualize the results on the frame
         detection_annotated_frame = detection_results[0].plot()
