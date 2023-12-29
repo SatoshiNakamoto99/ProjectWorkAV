@@ -1,3 +1,5 @@
+import torch
+
 import os
 import sys
 
@@ -14,9 +16,8 @@ from pathlib import Path
 from my_yolo import MyYOLO
 from app.settings import CONFIG
 
-import torch
 
-from ultralytics.utils.plotting import save_one_box
+#from ultralytics.utils.plotting import save_one_box
 from trackers.utils.utils import write_mot_results
 
 from tqdm import tqdm
@@ -59,7 +60,8 @@ def run(args):
             imgsz=args.imgsz,
             vid_stride=args.vid_stride,
             line_width=args.line_width,
-            tracker = CONFIG / (str(args.tracking_method) + '.yaml')
+            tracker = CONFIG / (str(args.tracking_method) + '.yaml'),
+            persist=True
         )
 
         # store custom args in predictor
