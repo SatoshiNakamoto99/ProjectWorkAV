@@ -1,14 +1,21 @@
 import cv2 as cv
 import os
+import sys
 from pathlib import Path
 
 import numpy as np
 
-from my_yolo import MyYOLO
 from tqdm import tqdm
 
 from ultralytics.utils import LOGGER
 LOGGER.setLevel("WARNING")
+
+
+current_path = os.path.dirname(os.path.abspath(__file__))
+project_path = os.path.abspath(os.path.join(current_path, ".."))
+sys.path.append(project_path)
+from my_yolo import MyYOLO
+
 
 
 def find_nearest_color(rgb_tuple):
@@ -65,8 +72,8 @@ if __name__ == "__main__":
 
     # Percorsi delle immagini e della cartella dei risultati
     input_path = Path("datasets/PAR/validation_set")
-    output_path = Path("resultsPAR")
-    results_path = 'PARresults.txt'
+    output_path = Path("test_colors_on_PAR_dataset/resultsPAR")
+    results_path = 'test_colors_on_PAR_dataset/PARresults.txt'
 
     # Crea la cartella dei risultati se non esiste
     if not os.path.exists(output_path):
@@ -86,15 +93,14 @@ if __name__ == "__main__":
 
         image = cv.imread(image_path)
 
-        tracking_results = tracking_model.track(image, tracker="config/botsort.yaml")
+        tracking_results = tracking_model.predict(image,tracker="config/botsort.yaml")
         for r in tracking_results:
                 img = np.copy(r.orig_img)
-
 
                 # iterate each object contour
                 for _, c in enumerate(r):
 
-                    if c.boxes is not None and hasattr(c.boxes, 'id') and c.boxes.id is not None:
+                    if c.boxes is not None:
                         #label = c.names[c.boxes.cls.tolist().pop()]
 
                         b_mask = np.zeros(img.shape[:2], np.uint8)
@@ -115,18 +121,15 @@ if __name__ == "__main__":
 
                         # cv.imshow('1',masked_pixels)
 
-                        # Retrieve and print the track ID
-                        track_id = c.boxes.id.int().cpu().tolist()[0]
-
-                        upper_pixels = masked_pixels[:int(h / 2), :]
+                        upper_pixels = masked_pixels[int(0.3*h/2):int(0.9*h/2), :]
                         # cv.imshow('2',upper_pixels)
-                        lower_pixels = masked_pixels[int(h / 2):, :]
+                        lower_pixels = masked_pixels[int(1.3*h/2):int(1.7*h/2), :]
                         # cv.imshow('3',lower_pixels)
                         # cv.waitKey(0)
                         # cv.destroyAllWindows()
 
-                        upper_color = estimate_predominant_color(upper_pixels,mask[:int(h / 2), :])
-                        lower_color = estimate_predominant_color(lower_pixels,mask[int(h / 2):, :])
+                        upper_color = estimate_predominant_color(upper_pixels,mask[int(0.3*h/2):int(0.9*h/2), :])
+                        lower_color = estimate_predominant_color(lower_pixels,mask[int(1.3*h/2):int(1.7*h/2), :])
 
                         output_file_path = str(output_path) + '/' + str(image_path.name.split('.')[0]) + '/image.jpg'
                         cv.imwrite(output_file_path, masked_pixels)

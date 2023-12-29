@@ -30,7 +30,7 @@ def calculate_metrics(true_data, predicted_data):
 def main():
     # Replace 'file1.txt' and 'file2.txt' with the actual file paths
     file1_path = 'datasets/PAR/annotations/validation_set.txt'
-    file2_path = 'PARresults.txt'
+    file2_path = 'test_colors_on_PAR_dataset/PARresults.txt'
 
     # Read data from the files
     true_upper_colors, true_lower_colors = read_file(file1_path)

@@ -50,10 +50,12 @@ class ObjectTracker:
     """
 
     # Initializes the tracking process with the specified YOLO model and video path
-    def __init__(self, video_path, model_path=settings.DETECTION_MODEL, verbose=True):
+    def __init__(self, video_path, configuration_path, results_path, model_path=settings.DETECTION_MODEL, verbose=True):
         self.tracking_model = MyYOLO(model_path)
         self.track_history = defaultdict(lambda: [])
         self.video_path = video_path
+        self.configuration_path = configuration_path
+        self.results_path = results_path
         self.colors = {0:RED,1:BLUE,2:GREEN}
         self.verbose = verbose
         video_name = Path(self.video_path).name.split('.')[0]
@@ -72,7 +74,7 @@ class ObjectTracker:
             height = int(cap.get(cv.CAP_PROP_FRAME_HEIGHT))
 
             # Carica il file JSON
-            with open("config.json") as json_file:
+            with open(self.configuration_path) as json_file:
                 data = json.load(json_file)
 
             # Recupera un singolo frame per testare
@@ -439,5 +441,5 @@ class ObjectTracker:
 
         data = {"people": filtered_people}
 
-        with open('results.json', 'w') as file:
+        with open(self.results_path, 'w') as file:
             json.dump(data, file, indent=2)

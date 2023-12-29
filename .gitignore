@@ -10,6 +10,7 @@ model
 results/
 datasets
 test_color.py
+test_segmentation.py
 resultsPAR/
 img.jpg
 mask.jpg
