@@ -3,9 +3,9 @@
     {
       "id": 1,
       "upper_color": "gray",
-      "lower_color": "brown",
+      "lower_color": "black",
       "roi1_passages": 3,
-      "roi1_persistence_time": 15,
+      "roi1_persistence_time": 14,
       "roi2_passages": 0,
       "roi2_persistence_time": 0
     },
@@ -20,7 +20,7 @@
     },
     {
       "id": 3,
-      "upper_color": "brown",
+      "upper_color": "black",
       "lower_color": "black",
       "roi1_passages": 0,
       "roi1_persistence_time": 0,
@@ -32,7 +32,7 @@
       "upper_color": "black",
       "lower_color": "black",
       "roi1_passages": 3,
-      "roi1_persistence_time": 31,
+      "roi1_persistence_time": 26,
       "roi2_passages": 0,
       "roi2_persistence_time": 0
     },
@@ -55,16 +55,16 @@
       "roi2_persistence_time": 0
     },
     {
-      "id": 8,
+      "id": 7,
       "upper_color": "black",
       "lower_color": "black",
       "roi1_passages": 1,
-      "roi1_persistence_time": 7,
+      "roi1_persistence_time": 6,
       "roi2_passages": 1,
       "roi2_persistence_time": 1
     },
     {
-      "id": 11,
+      "id": 8,
       "upper_color": "black",
       "lower_color": "black",
       "roi1_passages": 1,
@@ -73,8 +73,8 @@
       "roi2_persistence_time": 0
     },
     {
-      "id": 12,
-      "upper_color": "black",
+      "id": 9,
+      "upper_color": "gray",
       "lower_color": "black",
       "roi1_passages": 1,
       "roi1_persistence_time": 4,
@@ -82,7 +82,7 @@
       "roi2_persistence_time": 0
     },
     {
-      "id": 16,
+      "id": 11,
       "upper_color": "black",
       "lower_color": "black",
       "roi1_passages": 1,
@@ -91,7 +91,16 @@
       "roi2_persistence_time": 0
     },
     {
-      "id": 23,
+      "id": 12,
+      "upper_color": "black",
+      "lower_color": "black",
+      "roi1_passages": 0,
+      "roi1_persistence_time": 0,
+      "roi2_passages": 0,
+      "roi2_persistence_time": 0
+    },
+    {
+      "id": 13,
       "upper_color": "black",
       "lower_color": "gray",
       "roi1_passages": 1,

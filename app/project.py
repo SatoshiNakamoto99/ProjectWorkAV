@@ -25,8 +25,9 @@ def get_parameters():
 
 ### START READING ###
 start_time = time.time()
+VERBOSE = False
 video,configuration,results = get_parameters()
-tracker = ObjectTracker(video)
+tracker = ObjectTracker(video, verbose=VERBOSE)
 # tracker.save_single_frame()
 tracker.perform_tracking()
 stop_time = time.time()

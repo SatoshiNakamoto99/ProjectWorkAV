@@ -5,6 +5,7 @@ import json
 from math import ceil
 from pathlib import Path
 from datetime import timedelta
+import shutil
 
 import os
 import sys
@@ -49,17 +50,23 @@ class ObjectTracker:
     """
 
     # Initializes the tracking process with the specified YOLO model and video path
-    def __init__(self, video_path, model_path=settings.DETECTION_MODEL):
+    def __init__(self, video_path, model_path=settings.DETECTION_MODEL, verbose=True):
         self.tracking_model = MyYOLO(model_path)
         self.track_history = defaultdict(lambda: [])
         self.video_path = video_path
         self.colors = {0:RED,1:BLUE,2:GREEN}
+        self.verbose = verbose
+        video_name = Path(self.video_path).name.split('.')[0]
+        folder_path = 'results' + '/' + video_name
+        shutil.rmtree(folder_path)
+        
 
     # Gets the rescaled Regions of Interest (ROIs) from the video based on a configuration JSON file
     def get_rescaled_rois(self):
         cap = cv.VideoCapture(self.video_path)
         if not cap.isOpened():
-            print("Errore nell'apertura del video.")
+            if self.verbose:
+                print("Errore nell'apertura del video.")
         else:
             width = int(cap.get(cv.CAP_PROP_FRAME_WIDTH))
             height = int(cap.get(cv.CAP_PROP_FRAME_HEIGHT))
@@ -196,15 +203,15 @@ class ObjectTracker:
                     bbox_history[track_id]['max_height_frame'] = masked_pixels
 
                     # Get upper and lower pixel regions based on the bounding box
-                    upper_pixels = masked_pixels[:int(h / 2), :]
+                    upper_pixels = masked_pixels[int(0.3*h/2):int(0.9*h/2), :]
                     bbox_history[track_id]['upper_frame'] = upper_pixels
-                    lower_pixels = masked_pixels[int(h / 2):, :]
+                    lower_pixels = masked_pixels[int(1.3*h/2):int(1.7*h/2), :]
                     bbox_history[track_id]['lower_frame'] = lower_pixels
 
 
                     # Estimate the predominant color for upper and lower regions
-                    upper_color = self.estimate_predominant_color(upper_pixels)
-                    lower_color = self.estimate_predominant_color(lower_pixels)
+                    upper_color = self.estimate_predominant_color(upper_pixels,mask[int(0.3*h/2):int(0.9*h/2), :])
+                    lower_color = self.estimate_predominant_color(lower_pixels,mask[int(1.3*h/2):int(1.7*h/2), :])
 
                     # Update the colors in the people dictionary
                     bbox_history[track_id]['upper_color'] = upper_color
@@ -237,47 +244,55 @@ class ObjectTracker:
                 cv.imwrite(str(output_file_path), lower_frame)
 
 
-    # Estimates the predominant color in a pixel region using color analysis
-    def estimate_predominant_color(self, pixel_region):
-        # Filter out black pixels (where all channels are zero) in the pixel region
-        non_black_pixels = pixel_region[pixel_region.any(axis=2)]
+    def find_nearest_color(self,rgb_tuple):
+        color_names = ['black', 'blue', 'brown', 'gray', 'green', 'orange', 'pink', 'purple', 'red', 'white', 'yellow']
+        color_values = [(0, 0, 0), (0, 0, 255), (165, 42, 42), (128, 128, 128), (0, 128, 0), (255, 165, 0),
+                        (255, 192, 203), (128, 0, 128), (255, 0, 0), (255, 255, 255), (255, 255, 0)]
 
-        # Check if there are non-black pixels
-        if len(non_black_pixels) == 0:
-            return 'black'
-
-        # Calcola la media dei canali di colore sui pixel non neri
-        average_color = np.mean(non_black_pixels, axis=0)
-
-        # Mappa il colore medio alle categorie di colore
-        color_categories = {
-            'black': (0, 0, 0),
-            'blue': (0, 0, 255),
-            'brown': (139, 69, 19),
-            'green': (0, 128, 0),
-            'orange': (255, 69, 0),
-            'yellow': (255, 255, 0),
-            'pink': (255, 192, 203),
-            'purple': (128, 0, 128),
-            'red': (255, 0, 0),
-            'gray': (128, 128, 128),  # Valori approssimati per il grigio
-            'white': (255, 255, 255),  # Valori approssimati per il bianco
-        }
-
-        # Ordina i colori da nero a bianco
-        ordered_color_categories = ['black', 'blue', 'brown', 'green', 'orange', 'yellow', 'pink', 'purple', 'red', 'gray', 'white']
-
-        # Trova la categoria di colore più vicina al colore medio
         min_distance = float('inf')
-        estimated_color_category = 'black'
-        for category in ordered_color_categories:
-            target_color = color_categories[category]
-            distance = np.linalg.norm(average_color - target_color)
+        nearest_color = None
+
+        for name, value in zip(color_names, color_values):
+            distance = sum((a - b) ** 2 for a, b in zip(rgb_tuple, value))
             if distance < min_distance:
                 min_distance = distance
-                estimated_color_category = category
+                nearest_color = name
 
-        return estimated_color_category
+        return nearest_color
+
+
+    # Estimates the predominant color in a pixel region using color analysis
+    def estimate_predominant_color(self, pixel_region,mask):
+        # Resizing parameters
+
+
+        image_array = np.array(pixel_region)
+        mask_array = np.array(mask)
+        
+        # Espandi le dimensioni della maschera
+        mask_array = np.expand_dims(mask_array, axis=-1)
+
+        # Creazione di un array risultante con pixel dell'immagine originale dove la maschera è 255
+        result_array = np.where(mask_array == 255, image_array, 0)
+
+        # Ottieni i colori dall'array risultante
+        pixels = [tuple(pixel) for pixel in result_array.reshape(-1, 3) if not all(value == 0 for value in pixel)]
+
+        # Ordina i pixel per conteggio (primo elemento della tupla)
+        sorted_pixels = sorted(pixels, key=lambda t: pixels.count(t))
+
+        # Verifica se ci sono pixel nella lista ordinata prima di accedere all'indice -1
+        if sorted_pixels:
+            # Ottieni il colore dominante
+            dominant_color = sorted_pixels[-1]
+
+            # Converti il colore dominante nel colore più vicino
+            nearest_color = self.find_nearest_color(dominant_color)
+
+            return nearest_color
+        else:
+            # Nessun pixel valido trovato, restituisci un valore predefinito o gestisci il caso come appropriato
+            return "black"
     
     
     # Returns the Region of Interest (ROI) to which a point (x, y) belongs
@@ -311,12 +326,14 @@ class ObjectTracker:
                 people[track_id]["roi1_passages"] = 1
                 people[track_id]["start_persistence"] = timestamp
                 time = self.milliseconds_to_hh_mm_ss(timestamp)
-                print(f"[{time}]: track id {track_id} entered roi1")
+                if self.verbose:
+                    print(f"[{time}]: track id {track_id} entered roi1")
             elif roi == 2:
                 people[track_id]["roi2_passages"] = 1
                 people[track_id]["start_persistence"] = timestamp
                 time = self.milliseconds_to_hh_mm_ss(timestamp)
-                print(f"[{time}]: track id {track_id} entered roi2")
+                if self.verbose:
+                    print(f"[{time}]: track id {track_id} entered roi2")
             else:
                 people[track_id]["start_persistence"] = -1
 
@@ -324,22 +341,26 @@ class ObjectTracker:
             time = self.milliseconds_to_hh_mm_ss(timestamp)
 
             if roi == 1 and (people[track_id]["prev_roi"] != 1 or people[track_id]["lost_tracking"]):
-                print(f"[{time}]: track id {track_id} entered roi1")
+                if self.verbose:
+                    print(f"[{time}]: track id {track_id} entered roi1")
                 people[track_id]["roi1_passages"] = people[track_id]["roi1_passages"] + 1
                 people[track_id]["start_persistence"] = timestamp
             elif roi == 2 and (people[track_id]["prev_roi"] != 2 or people[track_id]["lost_tracking"]):
-                print(f"[{time}]: track id {track_id} entered roi2")
+                if self.verbose:
+                    print(f"[{time}]: track id {track_id} entered roi2")
                 people[track_id]["roi2_passages"] = people[track_id]["roi2_passages"] + 1
                 people[track_id]["start_persistence"] = timestamp
             elif((roi != 1 and people[track_id]["prev_roi"] == 1) or (roi != 2 and people[track_id]["prev_roi"] == 2)):
                 stop_persistence = timestamp
                 time_of_persistence=stop_persistence-people[track_id]["start_persistence"]
                 if people[track_id]["prev_roi"] == 1 and people[track_id]["roi1_persistence_time"] != -1:
-                    print(f"[{time}]: track id {track_id} exited roi1")
+                    if self.verbose:
+                        print(f"[{time}]: track id {track_id} exited roi1")
                     people[track_id]["roi1_persistence_time"] = people[track_id]["roi1_persistence_time"]+time_of_persistence/1000.0
                     people[track_id]["start_persistence"] = -1
                 elif people[track_id]["prev_roi"] == 2 and people[track_id]["roi2_persistence_time"] != -1:
-                    print(f"[{time}]: track id {track_id} exited roi2")
+                    if self.verbose:
+                        print(f"[{time}]: track id {track_id} exited roi2")
                     people[track_id]["roi2_persistence_time"] = people[track_id]["roi2_persistence_time"]+time_of_persistence/1000.0
                     people[track_id]["start_persistence"] = -1
             
@@ -355,7 +376,8 @@ class ObjectTracker:
                 if people[track_id]["start_persistence"] != -1:
                     stop_persistence = timestamp
                     time = self.milliseconds_to_hh_mm_ss(timestamp)
-                    print(f"[{time}]: track id {track_id} no more tracked")
+                    if self.verbose:
+                        print(f"[{time}]: track id {track_id} no more tracked")
                     time_of_persistence=stop_persistence-people[track_id]["start_persistence"]
                     if people[track_id]["prev_roi"] == 1:
                         people[track_id]["roi1_persistence_time"] = people[track_id]["roi1_persistence_time"]+time_of_persistence/1000.0

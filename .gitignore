@@ -8,3 +8,10 @@ __pycache__
 data/trackers
 model
 results/
+datasets
+test_color.py
+resultsPAR/
+img.jpg
+mask.jpg
+results.json
+PARresults.txt
