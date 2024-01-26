@@ -18,9 +18,12 @@ def read_file(file_path):
 def calculate_metrics(true_data, predicted_data):
 
     true_positive = 0
-    for image_name, prediction in predicted_data.items():
-        if true_data[image_name] == prediction:
-            true_positive = true_positive + 1
+    for image_name, truth in true_data.items():
+        try:
+            if predicted_data[image_name] == truth:
+                true_positive = true_positive + 1
+        except:
+            pass
         # else:
         #     print(f'In image {image_name} was predicted {colors_to_string(prediction)} but true colow is {colors_to_string(true_data[image_name])}')
 
@@ -44,7 +47,7 @@ def get_values(true_colors, predicted_colors):
 def main():
     # Replace 'file1.txt' and 'file2.txt' with the actual file paths
     file1_path = 'datasets/PAR/annotations/validation_set.txt'
-    file2_path = 'test_colors_on_PAR_dataset/PARresults.txt'
+    file2_path = 'test_colors_on_PAR_dataset/PARresults2.txt'
 
     # Read data from the files
     true_upper_colors, true_lower_colors = read_file(file1_path)
