@@ -18,3 +18,5 @@ results.json
 PARresults.txt
 venv
 dataset
+validation_set_reduced
+inference_results

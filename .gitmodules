@@ -1,6 +1,5 @@
-[submodule "ProjectWork/utils/TrackEval"]
-	path = ProjectWork/utils/TrackEval
-	url = https://github.com/JonathonLuiten/TrackEval
+
 [submodule "utils/TrackEval"]
 	path = utils/TrackEval
 	url = https://github.com/JonathonLuiten/TrackEval
+
