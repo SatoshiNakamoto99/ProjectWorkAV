@@ -13,7 +13,7 @@ current_path = os.path.dirname(os.path.abspath(__file__))
 project_path = os.path.abspath(os.path.join(current_path, ".."))
 sys.path.append(project_path)
 
-from attributes_recognition_module.MultiTaskNN import MultiTaskNN
+from attributes_recognition_module.src.MultiTaskNN import MultiTaskNN
 
 class LabelDict():
     def __init__(self) -> None:

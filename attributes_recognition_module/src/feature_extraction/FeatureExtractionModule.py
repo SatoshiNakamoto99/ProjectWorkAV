@@ -1,6 +1,6 @@
 from torch import nn
 import torch.nn.functional as F
-import src.feature_extraction.ConvNeXt as ConvNeXt
+import attributes_recognition_module.src.feature_extraction.ConvNeXt as ConvNeXt
 
 
 class FeatureExtractionModule(nn.Module):
