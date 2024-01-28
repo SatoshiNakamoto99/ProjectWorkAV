@@ -1,5 +1,9 @@
 #python app/group07.py --video data/video_prisco_tagliato.mp4 --configuration config.json --results results/video_prisco_tagliato/results.json
 #python app/group07.py --video data/video_atrio_cues/video2.mp4 --configuration config.json --results results/video_atrio_cues/video2.json
+#python app/group07.py --video data/video_atrio_cues/video4.mp4 --configuration config.json --results results/video_atrio_cues/video4.json
+#python app/group07.py --video data/video_atrio_cues/video6.mp4 --configuration config.json --results results/video_atrio_cues/video6.json
+#python app/group07.py --video data/video_atrio_cues/video8.mp4 --configuration config.json --results results/video_atrio_cues/video8.json
+
 import argparse
 from tracking import ObjectTracker
 from ultralytics.utils import LOGGER
@@ -26,7 +30,7 @@ def get_parameters():
 
 ### START READING ###
 start_time = time.time()
-VERBOSE = True
+VERBOSE = False
 video,configuration,results = get_parameters()
 tracker = ObjectTracker(video,configuration,results,verbose=VERBOSE)
 # tracker.save_single_frame()

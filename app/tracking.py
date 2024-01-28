@@ -65,6 +65,11 @@ class ObjectTracker:
         self.par_module = PARModuleInference(self.par_module_path)
         self.actual_detected_person = None
         shutil.rmtree(folder_path, ignore_errors=True)
+        self.par_results = {}
+        self.final_par_results = {}
+        self.FRAME_THRESHOLD = 21
+        self.FRAME_DETECTION = 3
+        # self.MIN_THRESHOLD = 5
         
 
     # Gets the rescaled Regions of Interest (ROIs) from the video based on a configuration JSON file
@@ -162,16 +167,37 @@ class ObjectTracker:
                         
                         self.get_roi_passages_and_persistence(people, track_id, roi, timestamp)
                         
-                        attributes_string = "gender:" + people[track_id]["gender"] +  "\n bag:" + people[track_id]["bag"] + "\n hat:" + people[track_id]["hat"] + "\n upper_color:" + people[track_id]["upper_color"] + "\n lower_color:" + people[track_id]["lower_color"]
-                                            
-                        y0 = y
-                        dy = 10
-                        for i, line in enumerate(attributes_string.split('\n')):
-                            y = y0 + i*dy
-                            # cv.putText(img, line, (50, y ), cv2.FONT_HERSHEY_SIMPLEX, 1, 2)
-                            cv.putText(tracking_annotated_frame, line, (int(x+w/2), int(y+h/2)), fontFace=cv.FONT_HERSHEY_SIMPLEX, fontScale=0.3, color=color, thickness=1)
-                        
-                        
+                        # fino a quando non si ha la predizione ufficiale
+                        if people[track_id]["num_frames"] >= 2 and people[track_id]["num_frames"] <= self.FRAME_THRESHOLD:
+                            attributes_string = "gender:" + people[track_id]["gender"] +  "\n bag:" + people[track_id]["bag"] + "\n hat:" + people[track_id]["hat"] + "\n upper_color:" + people[track_id]["upper_color"] + "\n lower_color:" + people[track_id]["lower_color"]    
+                            y0 = y
+                            dy = 10
+                            for i, line in enumerate(attributes_string.split('\n')):
+                                y = y0 + i*dy
+                                # cv.putText(img, line, (50, y ), cv2.FONT_HERSHEY_SIMPLEX, 1, 2)
+                                cv.putText(tracking_annotated_frame, line, (int(x+w/2), int(y+h/2)), fontFace=cv.FONT_HERSHEY_SIMPLEX, fontScale=0.3, color=color, thickness=1)
+                            
+                        # quando si ha predizione ufficiale
+                        if people[track_id]["num_frames"] == self.FRAME_THRESHOLD + 1:
+                            # print("after all\n")
+                            
+                            people[track_id]["gender"] = self.final_par_results[track_id]["gender"]
+                            people[track_id]["bag"] = self.final_par_results[track_id]["bag"]
+                            people[track_id]["hat"] = self.final_par_results[track_id]["hat"]
+                            people[track_id]["upper_color"] = self.final_par_results[track_id]["upper_color"]
+                            people[track_id]["lower_color"] = self.final_par_results[track_id]["lower_color"]
+                            
+                            # print(people[track_id])
+                            
+                            attributes_string = "gender:" + people[track_id]["gender"] +  "\n bag:" + people[track_id]["bag"] + "\n hat:" + people[track_id]["hat"] + "\n upper_color:" + people[track_id]["upper_color"] + "\n lower_color:" + people[track_id]["lower_color"]    
+                            y0 = y
+                            dy = 10
+                            for i, line in enumerate(attributes_string.split('\n')):
+                                y = y0 + i*dy
+                                # cv.putText(img, line, (50, y ), cv2.FONT_HERSHEY_SIMPLEX, 1, 2)
+                                cv.putText(tracking_annotated_frame, line, (int(x+w/2), int(y+h/2)), fontFace=cv.FONT_HERSHEY_SIMPLEX, fontScale=0.3, color=color, thickness=1)
+                            
+                            
                         
                         # print(f"results:\n{par_results}")
                         
@@ -212,20 +238,22 @@ class ObjectTracker:
     def get_roi_passages_and_persistence(self, people, track_id, roi, timestamp):
         if track_id not in people:
             
-            par_results = self.par_module.prediction(self.actual_detected_person)
+            # par_results = self.par_module.prediction(self.actual_detected_person)
+            self.par_results[track_id] = []
             
             people[track_id] = {
-                "gender":par_results["gender"],
-                "bag":par_results["bag"],
-                "hat":par_results["hat"],
-                "upper_color":par_results["upper_color"],
-                "lower_color":par_results["lower_color"],
+                "gender":" ",
+                "bag":" ",
+                "hat":" ",
+                "upper_color":" ",
+                "lower_color":" ",
                 "roi1_passages": 0,
                 "roi1_persistence_time": 0,
                 "roi2_passages": 0,
                 "roi2_persistence_time": 0,
                 "prev_roi": roi,
                 "lost_tracking": False,
+                "num_frames": 1
             }
             if roi == 1:
                 people[track_id]["roi1_passages"] = 1
@@ -241,10 +269,21 @@ class ObjectTracker:
                     print(f"[{time}]: track id {track_id} entered roi2")
             else:
                 people[track_id]["start_persistence"] = -1
+                
+            ### make first prediciton for showing something on screen the first time
+            temp_par_results = self.par_module.prediction(self.actual_detected_person)
+            people[track_id]["gender"] = temp_par_results["gender"]
+            people[track_id]["hat"] = temp_par_results["hat"]
+            people[track_id]["bag"] = temp_par_results["bag"]
+            people[track_id]["upper_color"] = temp_par_results["upper_color"]
+            people[track_id]["lower_color"] = temp_par_results["lower_color"]
+            
 
         else:
+                        
             time = self.milliseconds_to_hh_mm_ss(timestamp)
 
+            ### roi tracking
             if roi == 1 and (people[track_id]["prev_roi"] != 1 or people[track_id]["lost_tracking"]):
                 if self.verbose:
                     print(f"[{time}]: track id {track_id} entered roi1")
@@ -269,9 +308,57 @@ class ObjectTracker:
                     people[track_id]["roi2_persistence_time"] = people[track_id]["roi2_persistence_time"]+time_of_persistence/1000.0
                     people[track_id]["start_persistence"] = -1
             
+            ### model prediction at each frame interval
+            if people[track_id]["num_frames"] <= self.FRAME_THRESHOLD:
+                if people[track_id]["num_frames"] % self.FRAME_DETECTION == 0:
+                    # print("id" + str(track_id) + ", frame " + str(people[track_id]["num_frames"]) + "i make prediction")
+                    self.par_results[track_id].append(self.par_module.prediction(self.actual_detected_person))  # output del modello è un dict
+                    # for i in self.par_results[track_id]:
+                    #     print(i)
+                    #     print("\n") 
+                if people[track_id]["num_frames"] == self.FRAME_THRESHOLD:
+                    # performs majority voting for the self.FRAME_THRESHOLD/self.FRAME_DETECTION frames
+                    self.majority_voting(track_id)
+                    ################################################
+                    # print(f"definitive results for {track_id} after majority voting: ")
+                    # print("\n")
+                    # print(self.final_par_results[track_id])
+                people[track_id]["num_frames"] += 1
+            
         people[track_id]["prev_roi"] = roi
         people[track_id]["lost_tracking"]=False
 
+    def most_common(self, lst):
+        return max(set(lst), key=lst.count)
+
+    # performs majority voting for multiple prediction from parmodule for a single person with his own track_id
+    def majority_voting(self,track_id):
+        # self.par_results[track_id] è una lista di results
+        
+        gender_list = []
+        hat_list = []
+        bag_list = []
+        upper_color_list = []
+        lower_color_list = []
+
+        for results in self.par_results[track_id]:
+            gender_list.append(results["gender"])
+            hat_list.append(results["hat"])
+            bag_list.append(results["bag"])
+            upper_color_list.append(results["upper_color"])
+            lower_color_list.append(results["lower_color"])
+            
+        print(f"********* MAJORITY VOTING for {track_id}*********")
+        print(f"gender list: {gender_list}\n hat_list: {hat_list}\n bag_list: {bag_list}\n upper_color_list: {upper_color_list} \n lower_color_list: {lower_color_list}")
+        
+        self.final_par_results[track_id] = {}
+        
+        self.final_par_results[track_id]["gender"] = self.most_common(gender_list)
+        self.final_par_results[track_id]["hat"] = self.most_common(hat_list)
+        self.final_par_results[track_id]["bag"] = self.most_common(bag_list)
+        self.final_par_results[track_id]["upper_color"] = self.most_common(upper_color_list)
+        self.final_par_results[track_id]["lower_color"] = self.most_common(lower_color_list)
+        
 
     # Handles persistence of tracked people when they are no longer visible
     def get_persitence_for_no_more_tracked_people(self, people, track_ids, timestamp):
