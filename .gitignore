@@ -20,5 +20,9 @@ venv
 dataset
 validation_set_reduced
 inference_results
+<<<<<<< HEAD
 attributes_recognition_module
 test_colors_on_PAR_dataset
+=======
+test_colors_on_PAR_dataset
+>>>>>>> 320cde3385483704e5648769b392fd575fa15173
