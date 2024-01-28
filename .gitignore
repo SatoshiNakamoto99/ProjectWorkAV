@@ -20,3 +20,4 @@ venv
 dataset
 validation_set_reduced
 inference_results
+test_colors_on_PAR_dataset
