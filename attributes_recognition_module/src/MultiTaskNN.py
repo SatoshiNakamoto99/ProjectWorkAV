@@ -1,11 +1,11 @@
 
 import torch
 from torch import nn
-from attributes_recognition_module.attention_module.CBAM import CBAM
-from attributes_recognition_module.feature_extraction.FeatureExtractionModule import FeatureExtractionModule
+from src.attention_module.CBAM import CBAM
+from src.feature_extraction.FeatureExtractionModule import FeatureExtractionModule
 #from src.feature_extraction.FeatureExtractionModule2 import FeatureExtractionModule2
-from attributes_recognition_module.ClassificationModule import ClassificationModule
-from attributes_recognition_module.ASLLoss import  ASLLoss
+from src.ClassificationModule import ClassificationModule
+from src.ASLLoss import  ASLLoss
 
 class MultiTaskNN(nn.Module):
     def __init__(self, dim, convnext="v1", an="CBAM", device='cuda') -> None:
@@ -34,6 +34,8 @@ class MultiTaskNN(nn.Module):
         
         self.classification_module_upper_color = ClassificationModule(dim, 11)
         self.classification_module_lower_color = ClassificationModule(dim, 11)
+
+        
         # self.classification_module_gender = ClassificationModule(dim, 1)
         # self.classification_module_bag = ClassificationModule(dim, 1)
         # self.classification_module_hat = ClassificationModule(dim, 1)

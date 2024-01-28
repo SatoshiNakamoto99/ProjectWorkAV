@@ -20,3 +20,8 @@ venv
 dataset
 validation_set_reduced
 inference_results
+MultiTaskNN_ConvNeXt_v1_CBAM.pth
+par_dataset
+base_pipeline.py
+output.mp4
+yolov8n-seg.pt

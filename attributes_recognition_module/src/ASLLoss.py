@@ -176,6 +176,9 @@ class ASLLoss(nn.Module):
         
         if self.num_classes > 2:   
             loss = self.loss(x, y-1)  
+            # hot encopding for upper and lower color in order to index
+            #y = torch.zeros_like(x).scatter_(1, (y-1).long().unsqueeze(1), 1).float().to(device)
+            #loss = nn.MultiLabelSoftMarginLoss()(x, y)
         else:
             loss = self.loss(x, y)
         

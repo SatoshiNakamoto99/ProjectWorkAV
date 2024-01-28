@@ -9,12 +9,12 @@ def visualize_metrics(num_epochs,task_names, task_metrics, overall_metrics):
     # Visualize metrics for each task
     for task in task_names:
         print(f"{task} Metrics:")
-        print(f"Loss: {task_metrics[task]['Loss']:.4f}, Accuracy: {task_metrics[task]['Accuracy']:.4f}, Precision: {task_metrics[task]['Precision']:.4f}, Recall: {task_metrics[task]['Recall']:.4f}")
+        print(f"Loss: {task_metrics[task]['Loss']:.4f}, Accuracy: {task_metrics[task]['Accuracy']:.4f}, Precision: {task_metrics[task]['Precision']:.4f}, Recall: {task_metrics[task]['Recall']:.4f}, Accuracy_Personal: {task_metrics[task]['Accuracy_Personal']:.4f}")
         print()
 
     # Visualize overall metrics
     print("Overall Metrics:")
-    print(f"Loss: {overall_metrics['Loss']:.4f}, Accuracy: {overall_metrics['Accuracy']:.4f}, Precision: {overall_metrics['Precision']:.4f}, Recall: {overall_metrics['Recall']:.4f}")
+    print(f"Loss: {overall_metrics['Loss']:.4f}, Accuracy: {overall_metrics['Accuracy']:.4f}, Precision: {overall_metrics['Precision']:.4f}, Recall: {overall_metrics['Recall']:.4f}, Accuracy_Personal: {overall_metrics['Accuracy_Personal']:.4f}")
 
 def save_metrics_to_csv(num_epochs, task_names, task_metrics, overall_metrics, csv_filename='metrics.csv'):
     
@@ -44,10 +44,19 @@ def save_metrics_to_csv(num_epochs, task_names, task_metrics, overall_metrics, c
     print(f"Metrics saved to {csv_filename}")
 
 def calculate_metrics(labels, predictions):
+    true_positives = 0
+    #compute true positives consider that if the label is equal to the prediction is a true positive
+    # label e prediction are related to a batch
+    for label, prediction in zip(labels, predictions):
+        if label == prediction:
+            true_positives += 1
+    total_samples = len(labels)
+    accuracy_personal = true_positives / total_samples
+
     accuracy = accuracy_score(labels, predictions)
     precision = precision_score(labels, predictions, average='weighted', zero_division=0)
     recall = recall_score(labels, predictions, average='weighted', zero_division=0)
-    return accuracy, precision, recall
+    return accuracy, precision, recall, accuracy_personal
 
 
 # function that give a path if is not exists create it
