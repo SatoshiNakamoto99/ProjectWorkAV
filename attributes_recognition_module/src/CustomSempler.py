@@ -3,10 +3,10 @@ from itertools import cycle
 from torch.utils.data import  DataLoader
 from torchvision import transforms
 import torch
-from src.MultiTaskNN import MultiTaskNN
-from src.Trainer import Trainer
-from src.CustomImageDataset import CustomImageDataset
-from src.utils import create_path
+from attributes_recognition_module.src.MultiTaskNN import MultiTaskNN
+from attributes_recognition_module.src.Trainer import Trainer
+from attributes_recognition_module.src.CustomImageDataset import CustomImageDataset
+from attributes_recognition_module.src.utils import create_path
 import numpy as np
 from torch.utils.data.sampler import Sampler
 import random

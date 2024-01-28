@@ -13,7 +13,7 @@ current_path = os.path.dirname(os.path.abspath(__file__))
 project_path = os.path.abspath(os.path.join(current_path, ".."))
 sys.path.append(project_path)
 
-from attributes_recognition_module.MultiTaskNN import MultiTaskNN
+from attributes_recognition_module.src.MultiTaskNN import MultiTaskNN
 
 class LabelDict():
     def __init__(self) -> None:
@@ -78,7 +78,8 @@ class PARModuleInference():
         convnext_version = "v1"
         am_type = "CBAM"
         #select device
-        device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+        #device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+        device = torch.device('cpu') # for index cuda debugging
         #device = torch.device('cpu') # for index cuda debugging
         self.model = MultiTaskNN(1024, convnext_version, am_type, device).to(device)
         self.model.load_state_dict(torch.load(model_path, map_location=torch.device('cpu')))

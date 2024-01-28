@@ -5,11 +5,11 @@ import argparse
 from torch.utils.data import  DataLoader
 from torchvision import transforms
 import torch
-from src.MultiTaskNN import MultiTaskNN
-from src.Trainer import Trainer
-from src.CustomImageDataset import CustomImageDataset
-from src.CustomSempler import CustomSampler
-from src.utils import create_path
+from attributes_recognition_module.src.MultiTaskNN import MultiTaskNN
+from attributes_recognition_module.src.Trainer import Trainer
+from attributes_recognition_module.src.CustomImageDataset import CustomImageDataset
+from attributes_recognition_module.src.CustomSempler import CustomSampler
+from attributes_recognition_module.src.utils import create_path
 
 if __name__ == '__main__':
     
@@ -23,16 +23,16 @@ if __name__ == '__main__':
     if (opt.reduced == True):
         print("It will be used a reduced dataset")
     # Load the dataset here and return the data and labels as a list of tuples
-        train_annotation_file = "par_dataset\\training_set_reduced.txt"
-        validation_annotation_file = "par_dataset\\validation_set_reduced.txt"
-        train_img_dir = "par_dataset\\training_set_reduced\\"
-        validation_img_dir = "par_dataset\\validation_set_reduced\\"
+        train_annotation_file = "attributes_recognition_module\\par_dataset\\training_set_reduced.txt"
+        validation_annotation_file = "attributes_recognition_module\\par_dataset\\validation_set_reduced.txt"
+        train_img_dir = "attributes_recognition_module\\par_dataset\\training_set_reduced\\"
+        validation_img_dir = "attributes_recognition_module\\par_dataset\\validation_set_reduced\\"
     else:
         print("It will be used the entire dataset")
-        train_annotation_file = "par_dataset\\training_set.txt"
-        validation_annotation_file = "par_dataset\\validation_set.txt"
-        train_img_dir = "par_dataset\\training_set\\"
-        validation_img_dir = "par_dataset\\validation_set\\"
+        train_annotation_file = "attributes_recognition_module\\par_dataset\\training_set.txt"
+        validation_annotation_file = "attributes_recognition_module\\par_dataset\\validation_set.txt"
+        train_img_dir = "attributes_recognition_module\\par_dataset\\training_set\\"
+        validation_img_dir = "attributes_recognition_module\\par_dataset\\validation_set\\"
 
     data_transforms_val = transforms.Compose([transforms.Resize((96,288)), transforms.ToTensor()])
     data_trasfporms_train = transforms.Compose([transforms.Resize((96, 288)), transforms.ToTensor()])

@@ -1,11 +1,11 @@
 
 import torch
 from torch import nn
-from src.attention_module.CBAM import CBAM
-from src.feature_extraction.FeatureExtractionModule import FeatureExtractionModule
+from attributes_recognition_module.src.attention_module.CBAM import CBAM
+from attributes_recognition_module.src.feature_extraction.FeatureExtractionModule import FeatureExtractionModule
 #from src.feature_extraction.FeatureExtractionModule2 import FeatureExtractionModule2
-from src.ClassificationModule import ClassificationModule
-from src.ASLLoss import  ASLLoss
+from attributes_recognition_module.src.ClassificationModule import ClassificationModule
+from attributes_recognition_module.src.ASLLoss import  ASLLoss
 
 class MultiTaskNN(nn.Module):
     def __init__(self, dim, convnext="v1", an="CBAM", device='cuda') -> None:

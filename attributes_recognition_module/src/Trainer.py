@@ -8,7 +8,7 @@ import numpy as np
 from sklearn.metrics import accuracy_score, precision_score, recall_score
 #from src.DynamicWeightAveraging import DWA
 
-from src.utils import calculate_metrics, visualize_metrics, save_metrics_to_csv
+from attributes_recognition_module.src.utils import calculate_metrics, visualize_metrics, save_metrics_to_csv
 
 
 class Trainer:
