@@ -1,3 +1,7 @@
+
+import os
+import sys
+
 from torchvision.io.image import read_image, ImageReadMode
 from torchvision.transforms.functional import normalize, resize, to_pil_image
 from torchcam.methods import SmoothGradCAMpp
@@ -7,6 +11,11 @@ import torch
 from torchsummary import summary    
 from torchvision import transforms
 from PIL import Image
+from attributes_recognition_module.src.MultiTaskNN import MultiTaskNN
+
+current_path = os.path.dirname(os.path.abspath(__file__))
+project_path = os.path.abspath(os.path.join(current_path, ".."))
+sys.path.append(project_path)
 
 def draw_activation_map(model, input_tensor, image, filename):
     with SmoothGradCAMpp(model) as cam_extractor:
