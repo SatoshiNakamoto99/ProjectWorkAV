@@ -80,3 +80,13 @@ This project is licensed under the [MIT License] - see the [LICENSE](LICENSE) fi
 
 test_my_yolo_class is a simple class that tests che correctness of MyYOLO class with the usage of our custom tracker mode.
 To change parameters of you favourite tracker mode, you can easily change theese in config/<your tracker mode>
+
+
+## Project
+
+- How to run the Project
+python app/group07.py --video data/video_atrio_cues/video2.mp4 --configuration config.json --results results/video_atrio_cues/video2.json
+
+## Training
+
+python ./attributes_recognition_module/train_PAR.py --reduced

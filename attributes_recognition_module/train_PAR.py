@@ -5,6 +5,14 @@ import argparse
 from torch.utils.data import  DataLoader
 from torchvision import transforms
 import torch
+
+import os
+import sys
+
+current_path = os.path.dirname(os.path.abspath(__file__))
+project_path = os.path.abspath(os.path.join(current_path, ".."))
+sys.path.append(project_path)
+
 from attributes_recognition_module.src.MultiTaskNN import MultiTaskNN
 from attributes_recognition_module.src.Trainer import Trainer
 from attributes_recognition_module.src.CustomImageDataset import CustomImageDataset
@@ -43,11 +51,14 @@ if __name__ == '__main__':
     val_dataset = CustomImageDataset(validation_annotation_file, validation_img_dir, data_transforms_val)
     
     batch_size = 64
-    custom_sampler = CustomSampler(train_dataset, batch_size)
+
+    if (opt.reduced == True):
+        train_dataloader = DataLoader(train_dataset, batch_size=batch_size, shuffle=True)
+    else:
+        custom_sampler = CustomSampler(train_dataset, batch_size)
+        train_dataloader = DataLoader(train_dataset,  sampler=custom_sampler, shuffle=False)
+       
     
-    
-    #train_dataloader = DataLoader(train_dataset, batch_size=batch_size, shuffle=True)
-    train_dataloader = DataLoader(train_dataset,  sampler=custom_sampler, shuffle=False)
     val_dataloader = DataLoader(val_dataset, batch_size=batch_size)
 
 
