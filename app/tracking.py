@@ -6,6 +6,7 @@ from math import ceil
 from pathlib import Path
 from datetime import timedelta
 import shutil
+from par_inference import PARModuleInference
 
 import os
 import sys
@@ -60,7 +61,10 @@ class ObjectTracker:
         self.verbose = verbose
         video_name = Path(self.video_path).name.split('.')[0]
         folder_path = 'results' + '/' + video_name
-        shutil.rmtree(folder_path)
+        self.par_module_path = Path("attributes_recognition_module/model/MultiTaskNN_ConvNeXt_v1_CBAM.pth")
+        self.par_module = PARModuleInference(self.par_module_path)
+        self.actual_detected_person = None
+        shutil.rmtree(folder_path, ignore_errors=True)
         
 
     # Gets the rescaled Regions of Interest (ROIs) from the video based on a configuration JSON file
@@ -109,7 +113,7 @@ class ObjectTracker:
         source_name = Path(self.video_path).name.split('.')[0]
 
         frame_id = 0
-        bbox_history = defaultdict(lambda: {'max_height': 0, 'max_height_frame': None, 'track': [], 'upper_frame': None, 'lower_frame': None, 'upper_color': None, 'lower_color': None})
+        # bbox_history = defaultdict(lambda: {'max_height': 0, 'max_height_frame': None, 'track': [], 'upper_frame': None, 'lower_frame': None, 'upper_color': None, 'lower_color': None})
 
         # Create a video stream loader
         stream_loader = LoadVideoStream(source=self.video_path, fps_out=5)
@@ -123,7 +127,6 @@ class ObjectTracker:
 
                     tracking_results = self.tracking_model.track(frame, persist=True, conf=0.3, classes=[0], device='cpu', tracker="config/botsort.yaml")
 
-                    self.compute_masks(tracking_results,bbox_history)
                     frame_id = frame_id+1
 
                     # Visualize the results on the frame
@@ -150,15 +153,35 @@ class ObjectTracker:
                         # Disegna il bounding box con il colore appropriato
                         color = self.colors[roi]
                         cv.rectangle(tracking_annotated_frame, (int(x - w / 2), int(y - h / 2)), (int(x + w / 2), int(y + h / 2)), color, 4)
-
-                        self.get_roi_passages_and_persistence(people, track_id, roi, timestamp, bbox_history)
+                        
+                        self.actual_detected_person = frame[ int(y-h/2):int(y+h/2),
+                                        int(x-w/2):int(x+w/2) ] 
+                        
+                        # cv.imshow("prova", self.actual_detected_person)
+                        # cv.waitKey(0)
+                        
+                        self.get_roi_passages_and_persistence(people, track_id, roi, timestamp)
+                        
+                        attributes_string = "gender:" + people[track_id]["gender"] +  "\n bag:" + people[track_id]["bag"] + "\n hat:" + people[track_id]["hat"] + "\n upper_color:" + people[track_id]["upper_color"] + "\n lower_color:" + people[track_id]["lower_color"]
+                                            
+                        y0 = y
+                        dy = 10
+                        for i, line in enumerate(attributes_string.split('\n')):
+                            y = y0 + i*dy
+                            # cv.putText(img, line, (50, y ), cv2.FONT_HERSHEY_SIMPLEX, 1, 2)
+                            cv.putText(tracking_annotated_frame, line, (int(x+w/2), int(y+h/2)), fontFace=cv.FONT_HERSHEY_SIMPLEX, fontScale=0.3, color=color, thickness=1)
+                        
+                        
+                        
+                        # print(f"results:\n{par_results}")
+                        
+                        # exit()
 
 
                     self.get_persitence_for_no_more_tracked_people(people,track_ids,timestamp)
                     self.display_annoted_frame(tracking_annotated_frame,x_roi1,y_roi1,w_roi1,h_roi1,x_roi2,y_roi2,w_roi2,h_roi2)
                     last_time=timestamp
 
-                    self.save_images(bbox_history,source_name)
                     cv.waitKey(1)
 
         except KeyboardInterrupt:
@@ -169,132 +192,6 @@ class ObjectTracker:
             stream_loader.close()
             #cv.destroyAllWindows()
 
-
-    # Computes masks for detected regions and updates tracking history
-    def compute_masks(self,tracking_results,bbox_history):
-        # iterate detection results
-        for r in tracking_results:
-            img = np.copy(r.orig_img)
-
-            # iterate each object contour
-            for _, c in enumerate(r):
-                #label = c.names[c.boxes.cls.tolist().pop()]
-
-                b_mask = np.zeros(img.shape[:2], np.uint8)
-
-                # Create contour mask
-                contour = c.masks.xy.pop().astype(np.int32).reshape(-1, 1, 2)
-                _ = cv.drawContours(b_mask, [contour], -1, (255, 255, 255), cv.FILLED)
-
-                # Retrieve bounding box coordinates
-                x, y, w, h = c.boxes.xywh.cpu().tolist()[0]
-
-                # Crop the region of interest (ROI) based on the bounding box
-                roi = img[int(y - h / 2):int(y + h / 2), int(x - w / 2):int(x + w / 2)]
-                
-                # Extract pixels from the original image based on the mask
-                mask=b_mask[int(y - h / 2):int(y + h / 2), int(x - w / 2):int(x + w / 2)]
-                masked_pixels = cv.bitwise_and(roi, roi, mask=mask)
-
-                # Retrieve and print the track ID
-                track_id = c.boxes.id.int().cpu().tolist()[0]
-
-                # Update max height for the track_id
-                if h > bbox_history[track_id]['max_height']:
-                    bbox_history[track_id]['max_height'] = h
-                    bbox_history[track_id]['max_height_frame'] = masked_pixels
-
-                    # Get upper and lower pixel regions based on the bounding box
-                    upper_pixels = masked_pixels[int(0.3*h/2):int(0.9*h/2), :]
-                    bbox_history[track_id]['upper_frame'] = upper_pixels
-                    lower_pixels = masked_pixels[int(1.3*h/2):int(1.7*h/2), :]
-                    bbox_history[track_id]['lower_frame'] = lower_pixels
-
-
-                    # Estimate the predominant color for upper and lower regions
-                    upper_color = self.estimate_predominant_color(upper_pixels,mask[int(0.3*h/2):int(0.9*h/2), :])
-                    lower_color = self.estimate_predominant_color(lower_pixels,mask[int(1.3*h/2):int(1.7*h/2), :])
-
-                    # Update the colors in the people dictionary
-                    bbox_history[track_id]['upper_color'] = upper_color
-                    bbox_history[track_id]['lower_color'] = lower_color
-
-                # Append the track history
-                bbox_history[track_id]['track'].append((float(x), float(y)))
-
-
-    # Saves images with maximum height bounding boxes for each track_id
-    def save_images(self, bbox_history,source_name):
-        # Save the image with the maximum height bounding box for each track_id
-        for track_id, history in bbox_history.items():
-            max_height_frame = history['max_height_frame']
-            upper_frame = history['upper_frame']
-            lower_frame = history['lower_frame']
-
-            if max_height_frame is not None:
-                # Define the output folder and file path
-                output_folder = 'results' / Path(source_name) / str(track_id)
-                output_folder.mkdir(parents=True, exist_ok=True)
-
-                output_file_path = output_folder / 'max_height_image.jpg'
-                cv.imwrite(str(output_file_path), max_height_frame)
-
-                output_file_path = output_folder / 'upper_image.jpg'
-                cv.imwrite(str(output_file_path), upper_frame)
-
-                output_file_path = output_folder / 'lower_image.jpg'
-                cv.imwrite(str(output_file_path), lower_frame)
-
-
-    def find_nearest_color(self,rgb_tuple):
-        color_names = ['black', 'blue', 'brown', 'gray', 'green', 'orange', 'pink', 'purple', 'red', 'white', 'yellow']
-        color_values = [(0, 0, 0), (0, 0, 255), (165, 42, 42), (128, 128, 128), (0, 128, 0), (255, 165, 0),
-                        (255, 192, 203), (128, 0, 128), (255, 0, 0), (255, 255, 255), (255, 255, 0)]
-
-        min_distance = float('inf')
-        nearest_color = None
-
-        for name, value in zip(color_names, color_values):
-            distance = sum((a - b) ** 2 for a, b in zip(rgb_tuple, value))
-            if distance < min_distance:
-                min_distance = distance
-                nearest_color = name
-
-        return nearest_color
-
-
-    # Estimates the predominant color in a pixel region using color analysis
-    def estimate_predominant_color(self, pixel_region,mask):
-        # Resizing parameters
-
-
-        image_array = np.array(pixel_region)
-        mask_array = np.array(mask)
-        
-        # Espandi le dimensioni della maschera
-        mask_array = np.expand_dims(mask_array, axis=-1)
-
-        # Creazione di un array risultante con pixel dell'immagine originale dove la maschera è 255
-        result_array = np.where(mask_array == 255, image_array, 0)
-
-        # Ottieni i colori dall'array risultante
-        pixels = [tuple(pixel) for pixel in result_array.reshape(-1, 3) if not all(value == 0 for value in pixel)]
-
-        # Ordina i pixel per conteggio (primo elemento della tupla)
-        sorted_pixels = sorted(pixels, key=lambda t: pixels.count(t))
-
-        # Verifica se ci sono pixel nella lista ordinata prima di accedere all'indice -1
-        if sorted_pixels:
-            # Ottieni il colore dominante
-            dominant_color = sorted_pixels[-1]
-
-            # Converti il colore dominante nel colore più vicino
-            nearest_color = self.find_nearest_color(dominant_color)
-
-            return nearest_color
-        else:
-            # Nessun pixel valido trovato, restituisci un valore predefinito o gestisci il caso come appropriato
-            return "black"
     
     
     # Returns the Region of Interest (ROI) to which a point (x, y) belongs
@@ -312,17 +209,23 @@ class ObjectTracker:
     
 
     # Handles ROI passages and persistence of tracked people
-    def get_roi_passages_and_persistence(self, people, track_id, roi, timestamp, bbox_history):
+    def get_roi_passages_and_persistence(self, people, track_id, roi, timestamp):
         if track_id not in people:
+            
+            par_results = self.par_module.prediction(self.actual_detected_person)
+            
             people[track_id] = {
+                "gender":par_results["gender"],
+                "bag":par_results["bag"],
+                "hat":par_results["hat"],
+                "upper_color":par_results["upper_color"],
+                "lower_color":par_results["lower_color"],
                 "roi1_passages": 0,
                 "roi1_persistence_time": 0,
                 "roi2_passages": 0,
                 "roi2_persistence_time": 0,
                 "prev_roi": roi,
                 "lost_tracking": False,
-                "upper_color": bbox_history[track_id]["upper_color"],
-                "lower_color": bbox_history[track_id]["lower_color"]
             }
             if roi == 1:
                 people[track_id]["roi1_passages"] = 1
@@ -430,7 +333,10 @@ class ObjectTracker:
     def save_tracking_results(self, people):
         filtered_people = []
         for person_id, person in people.items():
-            filtered_people.append({"id": person_id, 
+            filtered_people.append({"id": person_id,
+                                    "gender": person["gender"],
+                                    "bag": person["bag"],
+                                    "hat": person["hat"], 
                                     "upper_color": person["upper_color"],
                                     "lower_color": person["lower_color"],
                                     "roi1_passages": person["roi1_passages"],
@@ -441,5 +347,10 @@ class ObjectTracker:
 
         data = {"people": filtered_people}
 
+
+        dir_path = os.path.dirname(self.results_path)
+        if not os.path.exists(dir_path):
+            os.makedirs(dir_path)    
+        
         with open(self.results_path, 'w') as file:
             json.dump(data, file, indent=2)
