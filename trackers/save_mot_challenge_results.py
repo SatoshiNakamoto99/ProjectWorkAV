@@ -13,7 +13,7 @@ sys.path.append(project_path)
 
 from pathlib import Path
 
-from my_yolo import MyYOLO
+from app.my_yolo import MyYOLO
 from app.settings import CONFIG
 
 
