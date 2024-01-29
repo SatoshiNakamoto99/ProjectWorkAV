@@ -16,8 +16,6 @@ from pathlib import Path
 from my_yolo import MyYOLO
 from app.settings import CONFIG
 
-
-#from ultralytics.utils.plotting import save_one_box
 from trackers.utils.utils import write_mot_results
 
 from tqdm import tqdm
@@ -27,7 +25,7 @@ from tqdm import tqdm
 def run(args):
     # Run YOLOv8 tracking on the frame, persisting tracks between frames
     yolo = MyYOLO(
-        args.yolo_model if 'yolov8' in str(args.yolo_model) else 'yolov8n.pt',
+        args.yolo_model #if 'yolov8' in str(args.yolo_model) else 'yolov8n.pt',
     )
 
     subfolder = args.source
@@ -74,7 +72,7 @@ def run(args):
             if r.boxes.data.shape[1] == 7:
 
                 if 'MOT16' or 'MOT17' or 'MOT20' in args.source:
-                    p = Path('data/trackers/mot_challenge/MOT17-train/' + args.tracking_method + '/data/' +  (Path(subfolder).name + '.txt'))
+                    p = Path('TrackEval/data/trackers/mot_challenge/MOT17-train/' + args.tracking_method + '/data/' +  (Path(subfolder).name + '.txt'))
                     yolo.predictor.mot_txt_path = p
 
                 if args.save_mot:
@@ -105,7 +103,7 @@ def run(args):
 
 def parse_opt():
     parser = argparse.ArgumentParser()
-    parser.add_argument('--yolo-model', type=Path, default='models/yolov8n-seg.pt',
+    parser.add_argument('--yolo-model', type=Path, default='models/best_Kfod5_100epoc_base',
                         help='yolo model path')
     # parser.add_argument('--reid-model', type=Path, default=WEIGHTS / 'osnet_x0_25_msmt17.pt',
     #                     help='reid model path')
