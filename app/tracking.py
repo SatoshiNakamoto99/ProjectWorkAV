@@ -333,7 +333,7 @@ class ObjectTracker:
                     print(f"[{time}]: track id {track_id} entered roi2")
                 people[track_id]["roi2_passages"] = people[track_id]["roi2_passages"] + 1
                 people[track_id]["start_persistence2"] = timestamp
-            if((roi != 1 and roi != 3 and prev_roi_is_roi1) or (roi != 2 and roi != 3 and prev_roi_is_roi2 == 2)):
+            if((roi != 1 and roi != 3 and prev_roi_is_roi1) or (roi != 2 and roi != 3 and prev_roi_is_roi2)):
                 stop_persistence = timestamp
                 if prev_roi_is_roi1 and people[track_id]["roi1_persistence_time"] != -1:
                     if self.verbose:
