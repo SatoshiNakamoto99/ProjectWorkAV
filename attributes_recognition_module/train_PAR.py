@@ -89,14 +89,14 @@ if __name__ == '__main__':
     model_dir = "models/"+exp_name+"/"
     create_path(model_dir)
     model_save_path = model_dir + model_name + ".pth"
-
+    patience = 5
     # if model  dir non esiste crealo 
     
 
     optimizer = torch.optim.AdamW(model.parameters(), lr=start_lr, weight_decay=weight_decay)
     scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(optimizer, num_epochs, eta_min=end_lr)
 
-    trainer = Trainer(model, train_dataloader, val_dataloader, model.compute_loss, optimizer, scheduler, num_epochs, device,model_dir, model_name, exp_name )
+    trainer = Trainer(model, train_dataloader, val_dataloader, model.compute_loss, optimizer, scheduler, num_epochs, device,model_dir, model_name, exp_name, patience = patience )
    
     # Train and validate the model
     trainer.train()
