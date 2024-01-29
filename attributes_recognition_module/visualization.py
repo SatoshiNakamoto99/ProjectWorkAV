@@ -72,18 +72,22 @@ if __name__ == "__main__":
         print(torch.cuda.memory_summary(device=None, abbreviated=False))
 
 model = MultiTaskNN(1024,device =  device).to(device)
-model.load_state_dict(torch.load("attributes_recognition_module\\model\\MultiTaskNN_ConvNeXt_v1_CBAM.pth"))
+model.load_state_dict(torch.load("attributes_recognition_module\\model\\MultiTaskNN_ConvNeXt_v1_CBAM.pth", map_location=torch.device('cpu')))
 model.eval()
 
 image_path = "attributes_recognition_module\\par_dataset\\training_set\\0002_2_25027_160_75_118_274.jpg"
 image = read_image(image_path, ImageReadMode.RGB)
-data_transforms = transforms.Compose([transforms.Resize((96,288)), transforms.ToTensor()])
+data_transforms = transforms.Compose([transforms.Resize((192,64)), transforms.ToTensor()])
 img = Image.open(f"{image_path}").convert("RGB")
 #from torchsummary import summary
 #summary(single_task_upper_color, input_size=(3, 288, 96))  # Sostituisci channels, height e width con le dimensioni del tuo input
 # Apply transforms
 img = data_transforms(img)
-input = img.unsqueeze(0).to(device)
+#plot the image
+plt.imshow(img.permute(1,2,0))
+plt.waitforbuttonpress()
 
-draw_activation_map( model, input)
+""" input = img.unsqueeze(0).to(device)
+
+draw_activation_map( model, input) """
  
