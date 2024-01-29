@@ -15,7 +15,7 @@ current_path = os.path.dirname(os.path.abspath(__file__))
 project_path = os.path.abspath(os.path.join(current_path, ".."))
 sys.path.append(project_path)
 
-from my_yolo import MyYOLO
+from app.my_yolo import MyYOLO
 from loaders import LoadVideoStream
 import settings as settings
 
@@ -23,6 +23,7 @@ import settings as settings
 RED = (0,0,255)
 GREEN = (0,255,0)
 BLUE = (255,0,0)
+WHITE = (255,255,255)
 
 
 class ObjectTracker:
@@ -51,17 +52,17 @@ class ObjectTracker:
     """
 
     # Initializes the tracking process with the specified YOLO model and video path
-    def __init__(self, video_path, configuration_path, results_path, model_path=settings.DETECTION_MODEL, verbose=True):
+    def __init__(self, video_path, configuration_path, results_path, model_path=settings.DETECTION_MODEL, par_module_path=settings.PAR_MODEL , verbose=True):
         self.tracking_model = MyYOLO(model_path)
         self.track_history = defaultdict(lambda: [])
         self.video_path = video_path
         self.configuration_path = configuration_path
         self.results_path = results_path
-        self.colors = {0:RED,1:BLUE,2:GREEN}
+        self.colors = {0:RED,1:BLUE,2:GREEN,3:WHITE}
         self.verbose = verbose
         video_name = Path(self.video_path).name.split('.')[0]
         folder_path = 'results' + '/' + video_name
-        self.par_module_path = Path("attributes_recognition_module/model/MultiTaskNN_ConvNeXt_v1_CBAM.pth")
+        self.par_module_path = par_module_path
         self.par_module = PARModuleInference(self.par_module_path)
         self.actual_detected_person = None
         shutil.rmtree(folder_path, ignore_errors=True)
@@ -96,10 +97,21 @@ class ObjectTracker:
             # Disegna i bounding box sull'immagine
             for roi in rois:
                 # Riscalare le coordinate e le dimensioni relative a valori assoluti
-                x = int(roi["x"] * width)
-                y = int(roi["y"] * height)
-                w = int(roi["w"] * width)
-                h = int(roi["h"] * height)
+
+                relative_x = roi["x"]
+                relative_y = roi["y"]
+                relative_w = roi["w"]
+                relative_h = roi["h"]
+
+                if(relative_x+relative_w > 1):
+                    relative_w = 1-relative_x
+                if(relative_y+relative_h > 1):
+                    relative_h = 1-relative_y
+
+                x = int(relative_x * width)
+                y = int(relative_y * height)
+                w = int(relative_w * width)
+                h = int(relative_h * height)
                 processed_rois.append((x,y,w,h))
 
             return processed_rois
@@ -189,7 +201,7 @@ class ObjectTracker:
                             
                             # print(people[track_id])
                             
-                            attributes_string = "gender:" + people[track_id]["gender"] +  "\n bag:" + people[track_id]["bag"] + "\n hat:" + people[track_id]["hat"] + "\n upper_color:" + people[track_id]["upper_color"] + "\n lower_color:" + people[track_id]["lower_color"]    
+                            attributes_string = "gender: " + people[track_id]["gender"] +  "\n bag: " + people[track_id]["bag"] + " \n hat:" + people[track_id]["hat"] + " \n upper_color:" + people[track_id]["upper_color"] + " \n lower_color:" + people[track_id]["lower_color"]    
                             y0 = y
                             dy = 10
                             for i, line in enumerate(attributes_string.split('\n')):
@@ -224,7 +236,10 @@ class ObjectTracker:
     def get_roi_of_belonging(self,x,y,x_roi1,y_roi1,w_roi1,h_roi1,x_roi2,y_roi2,w_roi2,h_roi2):
         # Verifica se il punto (x, y) appartiene a ROI1
         if x_roi1 <= x <= x_roi1 + w_roi1 and y_roi1 <= y <= y_roi1 + h_roi1:
-            roi = 1
+            if x_roi2 <= x <= x_roi2 + w_roi2 and y_roi2 <= y <= y_roi2 + h_roi2:
+                roi = 3
+            else:    
+                roi = 1
         # Verifica se il punto (x, y) appartiene a ROI2
         elif x_roi2 <= x <= x_roi2 + w_roi2 and y_roi2 <= y <= y_roi2 + h_roi2:
             roi = 2
@@ -255,20 +270,32 @@ class ObjectTracker:
                 "lost_tracking": False,
                 "num_frames": 1
             }
-            if roi == 1:
+            if roi == 1 or roi == 3:
                 people[track_id]["roi1_passages"] = 1
-                people[track_id]["start_persistence"] = timestamp
+                people[track_id]["start_persistence1"] = timestamp
+                people[track_id]["start_persistence2"] = -1
                 time = self.milliseconds_to_hh_mm_ss(timestamp)
+                if roi == 3:
+                    people[track_id]["roi2_passages"] = 1
+                    people[track_id]["start_persistence1"] = timestamp
+                    people[track_id]["start_persistence2"] = timestamp
+                
                 if self.verbose:
-                    print(f"[{time}]: track id {track_id} entered roi1")
+                    if roi == 1:
+                        print(f"[{time}]: track id {track_id} entered roi1")
+                    else: 
+                        print(f"[{time}]: track id {track_id} entered roi1")
+                        print(f"[{time}]: track id {track_id} entered roi2")
             elif roi == 2:
                 people[track_id]["roi2_passages"] = 1
-                people[track_id]["start_persistence"] = timestamp
+                people[track_id]["start_persistence2"] = timestamp
+                people[track_id]["start_persistence1"] = -1
                 time = self.milliseconds_to_hh_mm_ss(timestamp)
                 if self.verbose:
                     print(f"[{time}]: track id {track_id} entered roi2")
             else:
-                people[track_id]["start_persistence"] = -1
+                people[track_id]["start_persistence1"] = -1
+                people[track_id]["start_persistence2"] = -1
                 
             ### make first prediciton for showing something on screen the first time
             temp_par_results = self.par_module.prediction(self.actual_detected_person)
@@ -284,29 +311,42 @@ class ObjectTracker:
             time = self.milliseconds_to_hh_mm_ss(timestamp)
 
             ### roi tracking
-            if roi == 1 and (people[track_id]["prev_roi"] != 1 or people[track_id]["lost_tracking"]):
+            prev_roi = people[track_id]["prev_roi"]
+            prev_roi_is_roi1 = False
+            prev_roi_is_roi2 = False
+            if prev_roi == 3:
+                prev_roi_is_roi1 = True
+                prev_roi_is_roi2 = True
+            elif prev_roi == 1:
+                prev_roi_is_roi1 = True
+            elif prev_roi == 2:
+                prev_roi_is_roi2 = True
+
+
+            if (roi == 1 or roi == 3) and (not prev_roi_is_roi1 or people[track_id]["lost_tracking"]):
                 if self.verbose:
                     print(f"[{time}]: track id {track_id} entered roi1")
                 people[track_id]["roi1_passages"] = people[track_id]["roi1_passages"] + 1
-                people[track_id]["start_persistence"] = timestamp
-            elif roi == 2 and (people[track_id]["prev_roi"] != 2 or people[track_id]["lost_tracking"]):
+                people[track_id]["start_persistence1"] = timestamp
+            if (roi == 2 or roi == 3) and (not prev_roi_is_roi2 or people[track_id]["lost_tracking"]):
                 if self.verbose:
                     print(f"[{time}]: track id {track_id} entered roi2")
                 people[track_id]["roi2_passages"] = people[track_id]["roi2_passages"] + 1
-                people[track_id]["start_persistence"] = timestamp
-            elif((roi != 1 and people[track_id]["prev_roi"] == 1) or (roi != 2 and people[track_id]["prev_roi"] == 2)):
+                people[track_id]["start_persistence2"] = timestamp
+            if((roi != 1 and roi != 3 and prev_roi_is_roi1) or (roi != 2 and roi != 3 and prev_roi_is_roi2)):
                 stop_persistence = timestamp
-                time_of_persistence=stop_persistence-people[track_id]["start_persistence"]
-                if people[track_id]["prev_roi"] == 1 and people[track_id]["roi1_persistence_time"] != -1:
+                if prev_roi_is_roi1 and people[track_id]["roi1_persistence_time"] != -1:
                     if self.verbose:
                         print(f"[{time}]: track id {track_id} exited roi1")
+                    time_of_persistence=stop_persistence-people[track_id]["start_persistence1"]
                     people[track_id]["roi1_persistence_time"] = people[track_id]["roi1_persistence_time"]+time_of_persistence/1000.0
-                    people[track_id]["start_persistence"] = -1
-                elif people[track_id]["prev_roi"] == 2 and people[track_id]["roi2_persistence_time"] != -1:
+                    people[track_id]["start_persistence1"] = -1
+                elif prev_roi_is_roi2 and people[track_id]["roi2_persistence_time"] != -1:
                     if self.verbose:
                         print(f"[{time}]: track id {track_id} exited roi2")
+                    time_of_persistence=stop_persistence-people[track_id]["start_persistence2"]
                     people[track_id]["roi2_persistence_time"] = people[track_id]["roi2_persistence_time"]+time_of_persistence/1000.0
-                    people[track_id]["start_persistence"] = -1
+                    people[track_id]["start_persistence2"] = -1
             
             ### model prediction at each frame interval
             if people[track_id]["num_frames"] <= self.FRAME_THRESHOLD:
@@ -348,8 +388,8 @@ class ObjectTracker:
             upper_color_list.append(results["upper_color"])
             lower_color_list.append(results["lower_color"])
             
-        print(f"********* MAJORITY VOTING for {track_id}*********")
-        print(f"gender list: {gender_list}\n hat_list: {hat_list}\n bag_list: {bag_list}\n upper_color_list: {upper_color_list} \n lower_color_list: {lower_color_list}")
+        # print(f"********* MAJORITY VOTING for {track_id}*********")
+        # print(f"gender list: {gender_list}\n hat_list: {hat_list}\n bag_list: {bag_list}\n upper_color_list: {upper_color_list} \n lower_color_list: {lower_color_list}")
         
         self.final_par_results[track_id] = {}
         
@@ -365,31 +405,45 @@ class ObjectTracker:
         for track_id in people.keys():
             if track_id not in track_ids:
                 people[track_id]["lost_tracking"]=True
-                if people[track_id]["start_persistence"] != -1:
+                if people[track_id]["start_persistence1"] != -1 or people[track_id]["start_persistence2"] != -1:
                     stop_persistence = timestamp
                     time = self.milliseconds_to_hh_mm_ss(timestamp)
                     if self.verbose:
                         print(f"[{time}]: track id {track_id} no more tracked")
-                    time_of_persistence=stop_persistence-people[track_id]["start_persistence"]
-                    if people[track_id]["prev_roi"] == 1:
+                    
+                    prev_roi = people[track_id]["prev_roi"]
+                    if prev_roi == 1 or prev_roi == 3:
+                        time_of_persistence=stop_persistence-people[track_id]["start_persistence1"]
+                        if(time_of_persistence < 1000):
+                            time_of_persistence = 1000
                         people[track_id]["roi1_persistence_time"] = people[track_id]["roi1_persistence_time"]+time_of_persistence/1000.0
-                    elif people[track_id]["prev_roi"] == 2:
+                    if prev_roi == 2 or prev_roi == 3:
+                        time_of_persistence=stop_persistence-people[track_id]["start_persistence2"]
+                        if(time_of_persistence < 1000):
+                            time_of_persistence = 1000
                         people[track_id]["roi2_persistence_time"] = people[track_id]["roi2_persistence_time"]+time_of_persistence/1000.0
-                    people[track_id]["start_persistence"] = -1
+                    people[track_id]["start_persistence1"] = -1
+                    people[track_id]["start_persistence2"] = -1
 
 
     # Updates the persistence of tracked people at the end of the tracking process
     def update_persistence(self, people, last_time):
         for track_id in people.keys():
-            if people[track_id]["start_persistence"] != -1:
+            if people[track_id]["start_persistence1"] != -1:
                 stop_persistence = last_time
-                time_of_persistence=stop_persistence-people[track_id]["start_persistence"]
-                if people[track_id]["prev_roi"] == 1:
-                    people[track_id]["roi1_persistence_time"] = people[track_id]["roi1_persistence_time"]+time_of_persistence/1000.0
-                    people[track_id]["start_persistence"] = -1
-                elif people[track_id]["prev_roi"] == 2:
-                    people[track_id]["roi2_persistence_time"] = people[track_id]["roi2_persistence_time"]+time_of_persistence/1000.0
-                    people[track_id]["start_persistence"] = -1
+                time_of_persistence=stop_persistence-people[track_id]["start_persistence1"]
+                if(time_of_persistence < 1000):
+                    time_of_persistence = 1000
+                people[track_id]["roi1_persistence_time"] = people[track_id]["roi1_persistence_time"]+time_of_persistence/1000.0
+                people[track_id]["start_persistence1"] = -1
+            if people[track_id]["start_persistence2"] != -1:
+                stop_persistence = last_time
+                time_of_persistence=stop_persistence-people[track_id]["start_persistence2"]
+                if(time_of_persistence < 1000):
+                    time_of_persistence = 1000
+                people[track_id]["roi2_persistence_time"] = people[track_id]["roi2_persistence_time"]+time_of_persistence/1000.0
+                people[track_id]["start_persistence2"] = -1    
+
 
 
     # Converts milliseconds to hh:mm:ss format

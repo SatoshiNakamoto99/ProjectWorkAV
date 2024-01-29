@@ -12,7 +12,7 @@ from attributes_recognition_module.src.utils import calculate_metrics, visualize
 
 
 class Trainer:
-    def __init__(self, model, train_loader, val_loader, criterion, optimizer, scheduler, num_epochs, device, model_dir,model_name, exp_name, alpha=0.12, lr2=5e-4):
+    def __init__(self, model, train_loader, val_loader, criterion, optimizer, scheduler, num_epochs, device, model_dir,model_name, exp_name, alpha=0.12, lr2=5e-4, patience=5):
         self.model = model
         self.train_loader = train_loader
         self.val_loader = val_loader
@@ -27,6 +27,8 @@ class Trainer:
         self.exp_name = exp_name
         self.alpha  = alpha
         self.lr2 = lr2
+        self.patience = patience
+        self.counter = 0
 
     def train_epoch(self):
         self.model.train()
@@ -125,8 +127,13 @@ class Trainer:
                 self.best_val_loss = overall_metrics["Loss"]
                 print(f"Best Validation Loss: {self.best_val_loss:.4f}")
                 self.save_model()
+                self.counter = 0
             else:
                 print("Validation loss did not improve.")
+                self.counter += 1
+                if self.counter == self.patience:
+                    print("Early Stopping")
+                    break
                 
                 
             self.scheduler.step()

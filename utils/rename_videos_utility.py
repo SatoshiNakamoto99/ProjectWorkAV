@@ -9,18 +9,23 @@ def rinomina_video(cartella):
     # Elenco dei file nella cartella
     files = os.listdir(cartella)
 
-    # Filtra solo i file video (puoi aggiungere più estensioni se necessario)
-    video_files = [file for file in files if file.lower().endswith(('.mp4', '.avi', '.mkv', '.mov'))]
+    # Filtra solo i file video che non seguono la nomenclatura specifica
+    video_files = [file for file in files if file.lower().endswith(('.mp4', '.avi', '.mkv', '.mov')) and not file.lower().startswith('video')]
 
     # Se non ci sono file video nella cartella, esci
     if not video_files:
-        print(f"Non ci sono file video nella cartella {cartella}.")
+        print(f"Non ci sono file video nella cartella {cartella} che richiedono la rinominazione.")
         return
 
+    # Trova l'ultimo numero utilizzato
+    numeri_utilizzati = [int(file[5:7]) for file in files if file[5:7].isdigit() and file.lower().startswith('video')]
+    ultimo_numero = max(numeri_utilizzati, default=0)
+
     # Rinomina i file video
-    for i, video_file in enumerate(video_files, start=1):
+    for i, video_file in enumerate(video_files, start=ultimo_numero + 1):
         vecchio_nome = os.path.join(cartella, video_file)
-        nuovo_nome = os.path.join(cartella, f"video{i}.mp4")  # Cambia l'estensione se necessario
+        nuovo_nome = os.path.join(cartella, f"video{i:02d}.mp4")  # Numero a due cifre
+        
         os.rename(vecchio_nome, nuovo_nome)
         print(f"Rinominato: {vecchio_nome} -> {nuovo_nome}")
 

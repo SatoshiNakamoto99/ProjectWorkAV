@@ -5,7 +5,7 @@ import os
 current_path = os.path.dirname(os.path.abspath(__file__))
 project_path = os.path.abspath(os.path.join(current_path, ".."))
 sys.path.append(project_path)
-from my_yolo import MyYOLO
+from app.my_yolo import MyYOLO
 
 import torch
 from pathlib import Path
