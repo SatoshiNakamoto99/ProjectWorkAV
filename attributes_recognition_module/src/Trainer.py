@@ -32,45 +32,18 @@ class Trainer:
         self.model.train()
         total_loss = 0.0
         num_task = 5
-        ########################################################
-        #dwa = DWA(5)
-        ########################################################
         for inputs, labels in tqdm(self.train_loader, desc="Training"):
-            ########################################################
+
             inputs = inputs.squeeze()
             labels = [label.squeeze() for label in labels]
-            ########################################################
-            # fai un grafico per ogni iterazione per ogni task in cui riporti la distribuzione delle labelù
-            # per ogni task
-
-            # print size di inputs e labels
-            #print (f"inputs = {inputs.shape()}")
-
             inputs, labels = inputs.to(self.device), [label.to(self.device) for label in labels]
             self.optimizer.zero_grad()
             outputs = self.model(inputs)
             loss = self.criterion(outputs, labels)
-            ########################################################
-            """ dwa_weights_list, calculate = dwa.calculate_loss_weights(loss,False)
-            if calculate:
-                loss_tensor = torch.tensor(loss)
-                dwa_weights_tensor = torch.tensor(dwa_weights_list)
-                weighted_loss = torch.dot(dwa_weights_tensor, loss_tensor)
-                weighted_loss.requires_grad = True
-                weighted_loss.backward()
-            else:
-                sum(loss).backward() """
-            ########################################################
-            #total_loss += sum(loss).item() 
             sum(loss).backward( )
             self.optimizer.step()
-            total_loss += sum(loss).item()
+            total_loss += sum(loss).item() 
 
-
-            
-            
-            
-               
         total_loss/=num_task
         total_loss/=len(self.train_loader)
 
@@ -119,19 +92,15 @@ class Trainer:
                         task_all_predictions[task].extend(torch.argmax(output, dim=1).cpu().numpy())
                         all_labels.extend(label.cpu().numpy())
                         all_predictions.extend(torch.argmax(output, dim=1).cpu().numpy())
-                    #if task == "Upper Color" or task == "Lower Color":
-                    
-                        # print(f"{task} = > Prediction {task_all_predictions[task]} Label {task_all_labels[task]} ")
                     
 
             for task in task_names:
                 task_metrics[task]["Loss"] /= len(self.val_loader)  # loss/n_batch (381)
                 task_metrics[task]["Accuracy"], task_metrics[task]["Precision"], task_metrics[task]["Recall"] , task_metrics[task]["Accuracy_Personal"]= calculate_metrics(task_all_labels[task], task_all_predictions[task])
                 overall_metrics["Loss"] += task_metrics[task]["Loss"]
-                #print (f"{task} => {task_metrics[task]}")
+
         overall_metrics["Loss"] /= len(task_names)
         overall_metrics["Accuracy"], overall_metrics["Precision"], overall_metrics["Recall"], overall_metrics["Accuracy_Personal"] = calculate_metrics(all_labels, all_predictions)
-        #print(f"Overall Metrics: {overall_metrics}")
         
         return  overall_metrics, task_metrics, task_names
         

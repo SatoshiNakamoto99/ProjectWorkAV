@@ -2,6 +2,11 @@
 import os
 import sys
 
+
+current_path = os.path.dirname(os.path.abspath(__file__))
+project_path = os.path.abspath(os.path.join(current_path, ".."))
+sys.path.append(project_path)
+
 from torchvision.io.image import read_image, ImageReadMode
 from torchvision.transforms.functional import normalize, resize, to_pil_image
 from torchcam.methods import SmoothGradCAMpp
@@ -12,24 +17,32 @@ from torchsummary import summary
 from torchvision import transforms
 from PIL import Image
 from attributes_recognition_module.src.MultiTaskNN import MultiTaskNN
+from captum.attr import LayerGradCam
+from torchcam.methods import GradCAM
 
-current_path = os.path.dirname(os.path.abspath(__file__))
-project_path = os.path.abspath(os.path.join(current_path, ".."))
-sys.path.append(project_path)
 
-def draw_activation_map(model, input_tensor, image, filename):
-    with SmoothGradCAMpp(model) as cam_extractor:
-        # Retrieve the CAM by passing the model and the input tensor to the CAM extractor.
-        output = model(input_tensor)
-        activation_map = cam_extractor(class_idx=output.squeeze(0).argmax().item())
-        result = overlay_mask(image, to_pil_image(activation_map[0].squeeze[0], mode='F'), alpha=0.5)
-        plt.imshow(result); plt.axis('off'); plt.tight_layout()
-        plt.savefig(filename)
-data_transforms = transforms.Compose([
-        transforms.Resize((96,288)),
-        transforms.ToTensor()
-    ])
-
+def draw_activation_map(model,input_tensor):
+    if hasattr(model, "attention_module_upper_color"):
+        target_layer = getattr(model, "attention_module_upper_color")
+        with SmoothGradCAMpp(model,target_layer ) as cam_extractor:
+            # Retrieve the CAM by passing the model and the input tensor to the CAM extractor.
+            output = model(input_tensor)
+            class_idx=output[0].squeeze(0).argmax().item()
+            print(f"class_idx = {class_idx}")
+            print(type(class_idx))
+            print(f"output = {output[0].squeeze(0)}")
+            output = output[0].squeeze(0)
+            test = output
+            value_onòly = test.tolist()
+            value_onòly = torch.tensor(value_onòly[:,10])
+            print(f"value_only = {value_onòly}")
+            print(test)
+            #activation_map = cam_extractor(class_idx=class_idx, scores=output[0].squeeze(0))
+    else:
+        print("No attention module")
+        #result = overlay_mask(image, to_pil_image(activation_map[0].squeeze[0], mode='F'), alpha=0.5)
+        #plt.imshow(result); plt.axis('off'); plt.tight_layout()
+  
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
 if torch.cuda.is_available():
@@ -40,9 +53,19 @@ if torch.cuda.is_available():
     #print cuda memory usage
     print(torch.cuda.memory_summary(device=None, abbreviated=False))
 
-model = torch.load(".\models\MultiTaskNN_ConvNeXt_v1_CBAM_lr_1e-05_wd_0.01_epochs_100\MultiTaskNN_ConvNeXt_v1_CBAM.pth")
-image_path = ".\\par_dataset\\training_set\\0002_2_25027_160_75_118_274.jpg"
-image = read_image(image_path, ImageReadMode.RGB)
-input_tensor = data_transforms(image) if not isinstance(image, torch.Tensor) else image.unsqueeze(0).to(device)
+model = MultiTaskNN(1024,device =  device).to(device)
+model.load_state_dict(torch.load("attributes_recognition_module\\model\\MultiTaskNN_ConvNeXt_v1_CBAM.pth"))
+model.eval()
 
-draw_activation_map(model, input_tensor, image, "activation_map.jpg")
+image_path = "attributes_recognition_module\\par_dataset\\training_set\\0002_2_25027_160_75_118_274.jpg"
+image = read_image(image_path, ImageReadMode.RGB)
+data_transforms = transforms.Compose([transforms.Resize((96,288)), transforms.ToTensor()])
+img = Image.open(f"{image_path}").convert("RGB")
+#from torchsummary import summary
+#summary(single_task_upper_color, input_size=(3, 288, 96))  # Sostituisci channels, height e width con le dimensioni del tuo input
+# Apply transforms
+img = data_transforms(img)
+input = img.unsqueeze(0).to(device)
+
+draw_activation_map( model, input)
+ 
