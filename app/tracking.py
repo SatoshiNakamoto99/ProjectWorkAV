@@ -189,7 +189,7 @@ class ObjectTracker:
                             
                             # print(people[track_id])
                             
-                            attributes_string = "gender:" + people[track_id]["gender"] +  "\n bag:" + people[track_id]["bag"] + "\n hat:" + people[track_id]["hat"] + "\n upper_color:" + people[track_id]["upper_color"] + "\n lower_color:" + people[track_id]["lower_color"]    
+                            attributes_string = "gender: " + people[track_id]["gender"] +  "\n bag: " + people[track_id]["bag"] + " \n hat:" + people[track_id]["hat"] + " \n upper_color:" + people[track_id]["upper_color"] + " \n lower_color:" + people[track_id]["lower_color"]    
                             y0 = y
                             dy = 10
                             for i, line in enumerate(attributes_string.split('\n')):
