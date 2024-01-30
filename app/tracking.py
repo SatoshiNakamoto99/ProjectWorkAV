@@ -78,7 +78,8 @@ class ObjectTracker:
         cap = cv.VideoCapture(self.video_path)
         if not cap.isOpened():
             if self.verbose:
-                print("Errore nell'apertura del video.")
+                print("\nErrore nell'apertura del video.")
+                exit()
         else:
             width = int(cap.get(cv.CAP_PROP_FRAME_WIDTH))
             height = int(cap.get(cv.CAP_PROP_FRAME_HEIGHT))
