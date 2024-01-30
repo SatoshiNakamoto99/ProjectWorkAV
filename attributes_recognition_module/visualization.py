@@ -72,29 +72,23 @@ if __name__ == "__main__":
         #print cuda memory usage
         print(torch.cuda.memory_summary(device=None, abbreviated=False))
 
-    device = torch.device('cpu')
-    model = MultiTaskNN(1024,device =  device).to(device)
-    model.load_state_dict(torch.load("attributes_recognition_module\\model\\MultiTaskNN_ConvNeXt_v1_CBAM.pth",map_location=device))
-    model.eval()
+model = MultiTaskNN(1024,device =  device).to(device)
+model.load_state_dict(torch.load("attributes_recognition_module\\model\\MultiTaskNN_ConvNeXt_v1_CBAM.pth", map_location=torch.device('cpu')))
+model.eval()
 
-    image_path = "attributes_recognition_module\\par_dataset\\training_set_reduced\\CAM30-2014-02-20-20140220171915-20140220172439-tarid43-frame1944-line2.jpg"
-    image = read_image(image_path, ImageReadMode.RGB)
-    data_transforms = transforms.Compose([transforms.Resize((288,96)), transforms.ToTensor()])
-    img = Image.open(f"{image_path}").convert("RGB")
-    #from torchsummary import summary
-    #summary(single_task_upper_color, input_size=(3, 288, 96))  # Sostituisci channels, height e width con le dimensioni del tuo input
-    # Apply transforms
-    img = data_transforms(img)
-    img_np = np.transpose(img.numpy(), (1, 2, 0))
+image_path = "attributes_recognition_module\\par_dataset\\training_set\\0002_2_25027_160_75_118_274.jpg"
+image = read_image(image_path, ImageReadMode.RGB)
+data_transforms = transforms.Compose([transforms.Resize((192,64)), transforms.ToTensor()])
+img = Image.open(f"{image_path}").convert("RGB")
+#from torchsummary import summary
+#summary(single_task_upper_color, input_size=(3, 288, 96))  # Sostituisci channels, height e width con le dimensioni del tuo input
+# Apply transforms
+img = data_transforms(img)
+#plot the image
+plt.imshow(img.permute(1,2,0))
+plt.waitforbuttonpress()
 
-    # Mostra l'immagine con Matplotlib
-    plt.imshow(img_np)
-    plt.axis('off')
-    plt.tight_layout()
-    plt.show()
-    # plt.imshow(img); plt.axis('off'); plt.tight_layout(); plt.show()
-    plt.waitforbuttonpress()
-    # input = img.unsqueeze(0).to(device)
+""" input = img.unsqueeze(0).to(device)
 
-    # draw_activation_map( model, input)
+draw_activation_map( model, input) """
  

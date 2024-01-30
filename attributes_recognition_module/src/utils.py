@@ -16,7 +16,7 @@ def visualize_metrics(num_epochs,task_names, task_metrics, overall_metrics):
     print("Overall Metrics:")
     print(f"Loss: {overall_metrics['Loss']:.4f}, Accuracy: {overall_metrics['Accuracy']:.4f}, Precision: {overall_metrics['Precision']:.4f}, Recall: {overall_metrics['Recall']:.4f}, Accuracy_Personal: {overall_metrics['Accuracy_Personal']:.4f}")
 
-def save_metrics_to_csv(num_epochs, task_names, task_metrics, overall_metrics, csv_filename='metrics.csv'):
+def save_metrics_to_csv(num_epochs, task_names, task_metrics, overall_metrics, train_loss ,csv_filename='metrics.csv'):
     
     # Create a DataFrame to store metrics
     
@@ -31,7 +31,9 @@ def save_metrics_to_csv(num_epochs, task_names, task_metrics, overall_metrics, c
     
     
     # Add overall metrics to DataFrame
-    df.loc[i] = [num_epochs, 'Total', overall_metrics['Loss'], overall_metrics['Accuracy'], overall_metrics['Precision'], overall_metrics['Recall']]
+    df.loc[i] = [num_epochs, 'Total Val', overall_metrics['Loss'], overall_metrics['Accuracy'], overall_metrics['Precision'], overall_metrics['Recall']]
+    i = i+1
+    df.loc[i] = [num_epochs, 'Total Train', train_loss, '-', '-', '-']
     i = i+1
     # Add a blank row
     df.loc[i] = ['', '', '', '', '', '']
