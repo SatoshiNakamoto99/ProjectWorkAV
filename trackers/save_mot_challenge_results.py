@@ -16,6 +16,8 @@ from pathlib import Path
 from app.my_yolo import MyYOLO
 from app.settings import CONFIG
 
+
+from ultralytics.utils.plotting import save_one_box
 from trackers.utils.utils import write_mot_results
 
 from tqdm import tqdm

@@ -15,6 +15,7 @@ from torchcam.utils import overlay_mask
 import torch 
 from torchsummary import summary    
 from torchvision import transforms
+import numpy as np
 from PIL import Image
 from attributes_recognition_module.src.MultiTaskNN import MultiTaskNN
 from captum.attr import LayerGradCam
@@ -71,8 +72,9 @@ if __name__ == "__main__":
         #print cuda memory usage
         print(torch.cuda.memory_summary(device=None, abbreviated=False))
 
+device = torch.device('cpu')
 model = MultiTaskNN(1024,device =  device).to(device)
-model.load_state_dict(torch.load("attributes_recognition_module\\model\\MultiTaskNN_ConvNeXt_v1_CBAM.pth", map_location=torch.device('cpu')))
+model.load_state_dict(torch.load("attributes_recognition_module\\model\\MultiTaskNN_ConvNeXt_v1_CBAM.pth",map_location=device))
 model.eval()
 
 image_path = "attributes_recognition_module\\par_dataset\\training_set\\0002_2_25027_160_75_118_274.jpg"
