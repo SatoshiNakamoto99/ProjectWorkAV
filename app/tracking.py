@@ -43,7 +43,7 @@ class ObjectTracker:
         save_images: Save images of maximum height bounding box, upper, and lower frames for each tracked object.
         estimate_predominant_color: Estimate the predominant color in a pixel region using color analysis.
         get_roi_of_belonging: Determine the ROI to which a point belongs based on its coordinates.
-        get_roi_passages_and_persistence: Update ROI passages and persistence metrics for tracked objects.
+        update_informations: Update ROI passages and persistence metrics for tracked objects.
         get_persitence_for_no_more_tracked_people: Update persistence metrics for objects that are no longer tracked.
         update_persistence: Update persistence metrics for tracked objects at the end of tracking.
         milliseconds_to_hh_mm_ss: Convert milliseconds to a formatted time string (hh:mm:ss).
@@ -180,37 +180,9 @@ class ObjectTracker:
                             # cv.imshow("prova", self.actual_detected_person)
                             # cv.waitKey(0)
                             
-                            self.get_roi_passages_and_persistence(people, track_id, roi, timestamp)
+                            self.update_informations(people, track_id, roi, timestamp)
+                            self.put_informations(tracking_annotated_frame, people, track_id, color, x,y,w,h)
                             
-                            # fino a quando non si ha la predizione ufficiale
-                            if people[track_id]["num_frames"] >= 2 and people[track_id]["num_frames"] <= self.FRAME_THRESHOLD:
-                                attributes_string = " id: " + str(track_id) + "\n gender: " + people[track_id]["gender"] +  "\n bag: " + people[track_id]["bag"] + "\n hat: " + people[track_id]["hat"] + "\n upper_color: " + people[track_id]["upper_color"] + "\n lower_color: " + people[track_id]["lower_color"]    
-                                y0 = y
-                                dy = 10
-                                for i, line in enumerate(attributes_string.split('\n')):
-                                    y = y0 + i*dy
-                                    # cv.putText(img, line, (50, y ), cv2.FONT_HERSHEY_SIMPLEX, 1, 2)
-                                    cv.putText(tracking_annotated_frame, line, (int(x+w/2), int(y+h/2)), fontFace=cv.FONT_HERSHEY_SIMPLEX, fontScale=0.3, color=color, thickness=1)
-                                
-                            # quando si ha predizione ufficiale
-                            if people[track_id]["num_frames"] == self.FRAME_THRESHOLD + 1:
-                                # print("after all\n")
-                                
-                                people[track_id]["gender"] = self.final_par_results[track_id]["gender"]
-                                people[track_id]["bag"] = self.final_par_results[track_id]["bag"]
-                                people[track_id]["hat"] = self.final_par_results[track_id]["hat"]
-                                people[track_id]["upper_color"] = self.final_par_results[track_id]["upper_color"]
-                                people[track_id]["lower_color"] = self.final_par_results[track_id]["lower_color"]
-                                
-                                # print(people[track_id])
-                                
-                                attributes_string = " id: " + str(track_id) + "\n gender: " + people[track_id]["gender"] +  "\n bag: " + people[track_id]["bag"] + " \n hat: " + people[track_id]["hat"] + " \n upper_color: " + people[track_id]["upper_color"] + " \n lower_color: " + people[track_id]["lower_color"]    
-                                y0 = y
-                                dy = 10
-                                for i, line in enumerate(attributes_string.split('\n')):
-                                    y = y0 + i*dy
-                                    # cv.putText(img, line, (50, y ), cv2.FONT_HERSHEY_SIMPLEX, 1, 2)
-                                    cv.putText(tracking_annotated_frame, line, (int(x+w/2), int(y+h/2)), fontFace=cv.FONT_HERSHEY_SIMPLEX, fontScale=0.3, color=color, thickness=1)
                                                             
                             # print(f"results:\n{par_results}")
                             
@@ -252,7 +224,7 @@ class ObjectTracker:
     
 
     # Handles ROI passages and persistence of tracked people
-    def get_roi_passages_and_persistence(self, people, track_id, roi, timestamp):
+    def update_informations(self, people, track_id, roi, timestamp):
         if track_id not in people:
             
             # par_results = self.par_module.prediction(self.actual_detected_person)
@@ -401,6 +373,38 @@ class ObjectTracker:
         self.final_par_results[track_id]["upper_color"] = self.most_common(upper_color_list)
         self.final_par_results[track_id]["lower_color"] = self.most_common(lower_color_list)
         
+
+    def put_informations(self, tracking_annotated_frame, people, track_id, color, x,y,w,h):
+        # fino a quando non si ha la predizione ufficiale
+        if people[track_id]["num_frames"] >= 2 and people[track_id]["num_frames"] <= self.FRAME_THRESHOLD:
+            attributes_string = " id: " + str(track_id) + "\n gender: " + people[track_id]["gender"] +  "\n bag: " + people[track_id]["bag"] + "\n hat: " + people[track_id]["hat"] + "\n upper_color: " + people[track_id]["upper_color"] + "\n lower_color: " + people[track_id]["lower_color"]    
+            y0 = y
+            dy = 10
+            for i, line in enumerate(attributes_string.split('\n')):
+                y = y0 + i*dy
+                # cv.putText(img, line, (50, y ), cv2.FONT_HERSHEY_SIMPLEX, 1, 2)
+                cv.putText(tracking_annotated_frame, line, (int(x+w/2), int(y+h/2)), fontFace=cv.FONT_HERSHEY_SIMPLEX, fontScale=0.3, color=color, thickness=1)
+            
+        # quando si ha predizione ufficiale
+        if people[track_id]["num_frames"] == self.FRAME_THRESHOLD + 1:
+            # print("after all\n")
+            
+            people[track_id]["gender"] = self.final_par_results[track_id]["gender"]
+            people[track_id]["bag"] = self.final_par_results[track_id]["bag"]
+            people[track_id]["hat"] = self.final_par_results[track_id]["hat"]
+            people[track_id]["upper_color"] = self.final_par_results[track_id]["upper_color"]
+            people[track_id]["lower_color"] = self.final_par_results[track_id]["lower_color"]
+            
+            # print(people[track_id])
+            
+            attributes_string = " id: " + str(track_id) + "\n gender: " + people[track_id]["gender"] +  "\n bag: " + people[track_id]["bag"] + " \n hat: " + people[track_id]["hat"] + " \n upper_color: " + people[track_id]["upper_color"] + " \n lower_color: " + people[track_id]["lower_color"]    
+            y0 = y
+            dy = 10
+            for i, line in enumerate(attributes_string.split('\n')):
+                y = y0 + i*dy
+                # cv.putText(img, line, (50, y ), cv2.FONT_HERSHEY_SIMPLEX, 1, 2)
+                cv.putText(tracking_annotated_frame, line, (int(x+w/2), int(y+h/2)), fontFace=cv.FONT_HERSHEY_SIMPLEX, fontScale=0.3, color=color, thickness=1)
+
 
     # Handles persistence of tracked people when they are no longer visible
     def get_persitence_for_no_more_tracked_people(self, people, track_ids, timestamp):
