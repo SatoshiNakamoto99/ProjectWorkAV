@@ -121,7 +121,7 @@ class Trainer:
             #print(f"Epoch {epoch + 1}/{self.num_epochs}, Validation Loss: {val_loss:.4f}")
             visualize_metrics(epoch + 1, task_names, task_metrics, overall_metrics)
             matrics_filename = self.model_dir+ "metrics_"+self.exp_name+".csv"
-            save_metrics_to_csv(epoch + 1, task_names, task_metrics, overall_metrics, matrics_filename)
+            save_metrics_to_csv(epoch + 1, task_names, task_metrics, overall_metrics,train_loss, matrics_filename)
             if overall_metrics["Loss"] < self.best_val_loss:
                 print("Validation loss improved. Saving the model.")
                 self.best_val_loss = overall_metrics["Loss"]
