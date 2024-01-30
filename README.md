@@ -81,6 +81,20 @@ This project is licensed under the [MIT License] - see the [LICENSE](LICENSE) fi
 test_my_yolo_class is a simple class that tests che correctness of MyYOLO class with the usage of our custom tracker mode.
 To change parameters of you favourite tracker mode, you can easily change theese in config/<your tracker mode>
 
+## Performance Evaluation
+The performances of BotSort and ByteTrack have been evaluated with various parameter values on the Mot17 dataset using the metrics HOTA, CLEAR, and Count.
+
+To obtain the tracking results on Mot17, you need to run the following command in the terminal:
+
+```bash
+    bash trackers/run_mot_challenge.bash  
+```
+To evaluate the performances, navigate to the TrackEval folder:
+```bash
+    python data/modificoindici.py 
+    python scripts/run_mot_challenge.py
+```
+
 
 ## Project
 
