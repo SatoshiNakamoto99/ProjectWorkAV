@@ -187,14 +187,14 @@ class ObjectTracker:
                             # print(f"results:\n{par_results}")
                             
                             # exit()
+
+                        self.get_persitence_for_no_more_tracked_people(people,track_ids,timestamp)
+                        self.display_annoted_frame(tracking_annotated_frame,x_roi1,y_roi1,w_roi1,h_roi1,x_roi2,y_roi2,w_roi2,h_roi2)
+                        last_time=timestamp
+
+                        cv.waitKey(1)
                     except:
-                        pass
-
-                    self.get_persitence_for_no_more_tracked_people(people,track_ids,timestamp)
-                    self.display_annoted_frame(tracking_annotated_frame,x_roi1,y_roi1,w_roi1,h_roi1,x_roi2,y_roi2,w_roi2,h_roi2)
-                    last_time=timestamp
-
-                    cv.waitKey(1)
+                        pass                    
 
         except KeyboardInterrupt:
             print("Keyboard interrupt. Stopping the stream.")
@@ -204,7 +204,6 @@ class ObjectTracker:
             stream_loader.close()
             #cv.destroyAllWindows()
 
-    
     
     # Returns the Region of Interest (ROI) to which a point (x, y) belongs
     def get_roi_of_belonging(self,x,y,x_roi1,y_roi1,w_roi1,h_roi1,x_roi2,y_roi2,w_roi2,h_roi2):
