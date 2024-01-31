@@ -34,6 +34,7 @@ class Trainer:
         self.model.train()
         total_loss = 0.0
         num_task = 5
+        i = 0
         for inputs, labels in tqdm(self.train_loader, desc="Training"):
 
             inputs = inputs.squeeze()
@@ -45,9 +46,10 @@ class Trainer:
             sum(loss).backward( )
             self.optimizer.step()
             total_loss += sum(loss).item() 
+            i = i+1
 
         total_loss/=num_task
-        total_loss/=len(self.train_loader)
+        total_loss/=i
 
         return total_loss 
       
