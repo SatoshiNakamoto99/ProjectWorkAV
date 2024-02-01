@@ -78,7 +78,7 @@ class PARModuleInference():
               
     def prediction(self, image):
         
-        image_pil = Image.fromarray(image)
+        image_pil = Image.fromarray(image).convert("RGB")
         input = self.data_transforms(image_pil)
         input = input.unsqueeze(0)
         
