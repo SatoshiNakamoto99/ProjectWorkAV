@@ -10,3 +10,4 @@ match_thresh: 0.8  # threshold for matching tracks
 non_maximum_iou_distance: 0.15
 # min_box_area: 10  # threshold for min box areas(for tracker evaluation, not used for now)
 # mot20: False  # for tracker evaluation(not used for now)
+frame_rate: 5

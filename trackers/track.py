@@ -40,7 +40,7 @@ def on_predict_start(predictor, persist=False):
         f"Only support 'bytetrack' and 'botsort' for now, but got '{cfg.tracker_type}'"
     trackers = []
     for _ in range(predictor.dataset.bs):
-        tracker = TRACKER_MAP[cfg.tracker_type](args=cfg, frame_rate=30)
+        tracker = TRACKER_MAP[cfg.tracker_type](args=cfg, frame_rate=cfg.frame_rate)
         trackers.append(tracker)
     predictor.trackers = trackers
 

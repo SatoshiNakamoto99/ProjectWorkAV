@@ -19,3 +19,4 @@ with_reid: False
 
 alpha: 0.9
 non_maximum_iou_distance: 0.15
+frame_rate: 5

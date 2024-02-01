@@ -1,0 +1,460 @@
+Error importing BURST due to missing underlying dependency: No module named 'pycocotools'
+
+Eval Config:
+USE_PARALLEL         : False                         
+NUM_PARALLEL_CORES   : 8                             
+BREAK_ON_ERROR       : True                          
+RETURN_ON_ERROR      : False                         
+LOG_ON_ERROR         : /home/saramassaro/ProjectWork/TrackEval/error_log.txt
+PRINT_RESULTS        : True                          
+PRINT_ONLY_COMBINED  : False                         
+PRINT_CONFIG         : True                          
+TIME_PROGRESS        : True                          
+DISPLAY_LESS_PROGRESS : False                         
+OUTPUT_SUMMARY       : True                          
+OUTPUT_EMPTY_CLASSES : True                          
+OUTPUT_DETAILED      : True                          
+PLOT_CURVES          : True                          
+
+MotChallenge2DBox Config:
+PRINT_CONFIG         : True                          
+GT_FOLDER            : /home/saramassaro/ProjectWork/TrackEval/data/gt/mot_challenge/
+TRACKERS_FOLDER      : /home/saramassaro/ProjectWork/TrackEval/data/trackers/mot_challenge/
+OUTPUT_FOLDER        : None                          
+TRACKERS_TO_EVAL     : None                          
+CLASSES_TO_EVAL      : ['pedestrian']                
+BENCHMARK            : MOT17                         
+SPLIT_TO_EVAL        : train                         
+INPUT_AS_ZIP         : False                         
+DO_PREPROC           : True                          
+TRACKER_SUB_FOLDER   : data                          
+OUTPUT_SUB_FOLDER    :                               
+TRACKER_DISPLAY_NAMES : None                          
+SEQMAP_FOLDER        : None                          
+SEQMAP_FILE          : None                          
+SEQ_INFO             : None                          
+GT_LOC_FORMAT        : {gt_folder}/{seq}/gt/gt.txt   
+SKIP_SPLIT_FOL       : False                         
+
+CLEAR Config:
+METRICS              : ['HOTA', 'CLEAR']             
+THRESHOLD            : 0.5                           
+PRINT_CONFIG         : True                          
+
+Evaluating 2 tracker(s) on 21 sequence(s) for 1 class(es) on MotChallenge2DBox dataset using the following metrics: HOTA, CLEAR, Count
+
+
+Evaluating bytetrack
+
+    MotChallenge2DBox.get_raw_seq_data(bytetrack, MOT17-02-DPM)            0.1691 sec
+    MotChallenge2DBox.get_preprocessed_seq_data(pedestrian)                0.1632 sec
+    HOTA.eval_sequence()                                                   0.1663 sec
+    CLEAR.eval_sequence()                                                  0.0258 sec
+    Count.eval_sequence()                                                  0.0000 sec
+1 eval_sequence(MOT17-02-DPM, bytetrack)                                 0.5262 sec
+    MotChallenge2DBox.get_raw_seq_data(bytetrack, MOT17-02-FRCNN)          0.1491 sec
+    MotChallenge2DBox.get_preprocessed_seq_data(pedestrian)                0.1320 sec
+    HOTA.eval_sequence()                                                   0.1520 sec
+    CLEAR.eval_sequence()                                                  0.0310 sec
+    Count.eval_sequence()                                                  0.0000 sec
+2 eval_sequence(MOT17-02-FRCNN, bytetrack)                               0.4661 sec
+    MotChallenge2DBox.get_raw_seq_data(bytetrack, MOT17-02-SDP)            0.2191 sec
+    MotChallenge2DBox.get_preprocessed_seq_data(pedestrian)                0.1365 sec
+    HOTA.eval_sequence()                                                   0.1668 sec
+    CLEAR.eval_sequence()                                                  0.0291 sec
+    Count.eval_sequence()                                                  0.0000 sec
+3 eval_sequence(MOT17-02-SDP, bytetrack)                                 0.5538 sec
+    MotChallenge2DBox.get_raw_seq_data(bytetrack, MOT17-04-DPM)            0.6954 sec
+    MotChallenge2DBox.get_preprocessed_seq_data(pedestrian)                0.3490 sec
+    HOTA.eval_sequence()                                                   0.4163 sec
+    CLEAR.eval_sequence()                                                  0.0613 sec
+    Count.eval_sequence()                                                  0.0000 sec
+4 eval_sequence(MOT17-04-DPM, bytetrack)                                 1.5253 sec
+    MotChallenge2DBox.get_raw_seq_data(bytetrack, MOT17-04-FRCNN)          0.7590 sec
+    MotChallenge2DBox.get_preprocessed_seq_data(pedestrian)                0.3357 sec
+    HOTA.eval_sequence()                                                   0.3384 sec
+    CLEAR.eval_sequence()                                                  0.0620 sec
+    Count.eval_sequence()                                                  0.0000 sec
+5 eval_sequence(MOT17-04-FRCNN, bytetrack)                               1.4984 sec
+    MotChallenge2DBox.get_raw_seq_data(bytetrack, MOT17-04-SDP)            0.7872 sec
+    MotChallenge2DBox.get_preprocessed_seq_data(pedestrian)                0.2723 sec
+    HOTA.eval_sequence()                                                   0.3951 sec
+    CLEAR.eval_sequence()                                                  0.0829 sec
+    Count.eval_sequence()                                                  0.0000 sec
+6 eval_sequence(MOT17-04-SDP, bytetrack)                                 1.5428 sec
+    MotChallenge2DBox.get_raw_seq_data(bytetrack, MOT17-05-DPM)            0.1060 sec
+    MotChallenge2DBox.get_preprocessed_seq_data(pedestrian)                0.2965 sec
+    HOTA.eval_sequence()                                                   0.2327 sec
+    CLEAR.eval_sequence()                                                  0.0323 sec
+    Count.eval_sequence()                                                  0.0000 sec
+7 eval_sequence(MOT17-05-DPM, bytetrack)                                 0.6699 sec
+    MotChallenge2DBox.get_raw_seq_data(bytetrack, MOT17-05-FRCNN)          0.0971 sec
+    MotChallenge2DBox.get_preprocessed_seq_data(pedestrian)                0.2165 sec
+    HOTA.eval_sequence()                                                   0.2753 sec
+    CLEAR.eval_sequence()                                                  0.0356 sec
+    Count.eval_sequence()                                                  0.0000 sec
+8 eval_sequence(MOT17-05-FRCNN, bytetrack)                               0.6268 sec
+    MotChallenge2DBox.get_raw_seq_data(bytetrack, MOT17-05-SDP)            0.1050 sec
+    MotChallenge2DBox.get_preprocessed_seq_data(pedestrian)                0.2504 sec
+    HOTA.eval_sequence()                                                   0.2120 sec
+    CLEAR.eval_sequence()                                                  0.0309 sec
+    Count.eval_sequence()                                                  0.0000 sec
+9 eval_sequence(MOT17-05-SDP, bytetrack)                                 0.6008 sec
+    MotChallenge2DBox.get_raw_seq_data(bytetrack, MOT17-09-DPM)            0.0795 sec
+    MotChallenge2DBox.get_preprocessed_seq_data(pedestrian)                0.1324 sec
+    HOTA.eval_sequence()                                                   0.1645 sec
+    CLEAR.eval_sequence()                                                  0.0325 sec
+    Count.eval_sequence()                                                  0.0000 sec
+10 eval_sequence(MOT17-09-DPM, bytetrack)                                 0.4112 sec
+    MotChallenge2DBox.get_raw_seq_data(bytetrack, MOT17-09-FRCNN)          0.1268 sec
+    MotChallenge2DBox.get_preprocessed_seq_data(pedestrian)                0.1549 sec
+    HOTA.eval_sequence()                                                   0.1626 sec
+    CLEAR.eval_sequence()                                                  0.0330 sec
+    Count.eval_sequence()                                                  0.0000 sec
+11 eval_sequence(MOT17-09-FRCNN, bytetrack)                               0.4791 sec
+    MotChallenge2DBox.get_raw_seq_data(bytetrack, MOT17-09-SDP)            0.0878 sec
+    MotChallenge2DBox.get_preprocessed_seq_data(pedestrian)                0.1262 sec
+    HOTA.eval_sequence()                                                   0.1460 sec
+    CLEAR.eval_sequence()                                                  0.0221 sec
+    Count.eval_sequence()                                                  0.0000 sec
+12 eval_sequence(MOT17-09-SDP, bytetrack)                                 0.3845 sec
+    MotChallenge2DBox.get_raw_seq_data(bytetrack, MOT17-10-DPM)            0.1238 sec
+    MotChallenge2DBox.get_preprocessed_seq_data(pedestrian)                0.1595 sec
+    HOTA.eval_sequence()                                                   0.2115 sec
+    CLEAR.eval_sequence()                                                  0.0318 sec
+    Count.eval_sequence()                                                  0.0000 sec
+13 eval_sequence(MOT17-10-DPM, bytetrack)                                 0.5290 sec
+    MotChallenge2DBox.get_raw_seq_data(bytetrack, MOT17-10-FRCNN)          0.1329 sec
+    MotChallenge2DBox.get_preprocessed_seq_data(pedestrian)                0.2056 sec
+    HOTA.eval_sequence()                                                   0.1900 sec
+    CLEAR.eval_sequence()                                                  0.0294 sec
+    Count.eval_sequence()                                                  0.0000 sec
+14 eval_sequence(MOT17-10-FRCNN, bytetrack)                               0.5600 sec
+    MotChallenge2DBox.get_raw_seq_data(bytetrack, MOT17-10-SDP)            0.1370 sec
+    MotChallenge2DBox.get_preprocessed_seq_data(pedestrian)                0.1560 sec
+    HOTA.eval_sequence()                                                   0.1860 sec
+    CLEAR.eval_sequence()                                                  0.0289 sec
+    Count.eval_sequence()                                                  0.0000 sec
+15 eval_sequence(MOT17-10-SDP, bytetrack)                                 0.5102 sec
+    MotChallenge2DBox.get_raw_seq_data(bytetrack, MOT17-11-DPM)            0.1640 sec
+    MotChallenge2DBox.get_preprocessed_seq_data(pedestrian)                0.2907 sec
+    HOTA.eval_sequence()                                                   0.2796 sec
+    CLEAR.eval_sequence()                                                  0.0348 sec
+    Count.eval_sequence()                                                  0.0000 sec
+16 eval_sequence(MOT17-11-DPM, bytetrack)                                 0.7717 sec
+    MotChallenge2DBox.get_raw_seq_data(bytetrack, MOT17-11-FRCNN)          0.1170 sec
+    MotChallenge2DBox.get_preprocessed_seq_data(pedestrian)                0.2257 sec
+    HOTA.eval_sequence()                                                   0.2757 sec
+    CLEAR.eval_sequence()                                                  0.0431 sec
+    Count.eval_sequence()                                                  0.0000 sec
+17 eval_sequence(MOT17-11-FRCNN, bytetrack)                               0.6644 sec
+    MotChallenge2DBox.get_raw_seq_data(bytetrack, MOT17-11-SDP)            0.1509 sec
+    MotChallenge2DBox.get_preprocessed_seq_data(pedestrian)                0.2947 sec
+    HOTA.eval_sequence()                                                   0.2379 sec
+    CLEAR.eval_sequence()                                                  0.0339 sec
+    Count.eval_sequence()                                                  0.0000 sec
+18 eval_sequence(MOT17-11-SDP, bytetrack)                                 0.7210 sec
+    MotChallenge2DBox.get_raw_seq_data(bytetrack, MOT17-13-DPM)            0.1353 sec
+    MotChallenge2DBox.get_preprocessed_seq_data(pedestrian)                0.2157 sec
+    HOTA.eval_sequence()                                                   0.2326 sec
+    CLEAR.eval_sequence()                                                  0.0306 sec
+    Count.eval_sequence()                                                  0.0000 sec
+19 eval_sequence(MOT17-13-DPM, bytetrack)                                 0.6165 sec
+    MotChallenge2DBox.get_raw_seq_data(bytetrack, MOT17-13-FRCNN)          0.1948 sec
+    MotChallenge2DBox.get_preprocessed_seq_data(pedestrian)                0.2039 sec
+    HOTA.eval_sequence()                                                   0.1843 sec
+    CLEAR.eval_sequence()                                                  0.0293 sec
+    Count.eval_sequence()                                                  0.0000 sec
+20 eval_sequence(MOT17-13-FRCNN, bytetrack)                               0.6144 sec
+    MotChallenge2DBox.get_raw_seq_data(bytetrack, MOT17-13-SDP)            0.1221 sec
+    MotChallenge2DBox.get_preprocessed_seq_data(pedestrian)                0.1993 sec
+    HOTA.eval_sequence()                                                   0.2344 sec
+    CLEAR.eval_sequence()                                                  0.0292 sec
+    Count.eval_sequence()                                                  0.0000 sec
+21 eval_sequence(MOT17-13-SDP, bytetrack)                                 0.5874 sec
+
+All sequences for bytetrack finished in 14.86 seconds
+
+HOTA: bytetrack-pedestrian         HOTA      DetA      AssA      DetRe     DetPr     AssRe     AssPr     LocA      OWTA      HOTA(0)   LocA(0)   HOTALocA(0)
+MOT17-02-DPM                       39.457    38.947    40.261    40.26     84.796    41.984    85.24     86.203    40.196    46.022    83.365    38.366    
+MOT17-02-FRCNN                     39.457    38.947    40.261    40.26     84.796    41.984    85.24     86.203    40.196    46.022    83.365    38.366    
+MOT17-02-SDP                       39.457    38.947    40.261    40.26     84.796    41.984    85.24     86.203    40.196    46.022    83.365    38.366    
+MOT17-04-DPM                       68.243    68.123    68.873    76.732    80.767    73.482    87.152    87.272    72.64     86.255    79.814    68.843    
+MOT17-04-FRCNN                     68.243    68.123    68.873    76.732    80.767    73.482    87.152    87.272    72.64     86.255    79.814    68.843    
+MOT17-04-SDP                       68.243    68.123    68.873    76.732    80.767    73.482    87.152    87.272    72.64     86.255    79.814    68.843    
+MOT17-05-DPM                       52.364    56.912    48.544    61.697    78.942    54.681    76.884    83.896    54.653    67.295    78.76     53.002    
+MOT17-05-FRCNN                     52.364    56.912    48.544    61.697    78.942    54.681    76.884    83.896    54.653    67.295    78.76     53.002    
+MOT17-05-SDP                       52.364    56.912    48.544    61.697    78.942    54.681    76.884    83.896    54.653    67.295    78.76     53.002    
+MOT17-09-DPM                       50.31     66.607    38.075    70.086    86.272    50.106    72.679    87.363    51.656    59.772    84.546    50.535    
+MOT17-09-FRCNN                     50.31     66.607    38.075    70.086    86.272    50.106    72.679    87.363    51.656    59.772    84.546    50.535    
+MOT17-09-SDP                       50.31     66.607    38.075    70.086    86.272    50.106    72.679    87.363    51.656    59.772    84.546    50.535    
+MOT17-10-DPM                       39.396    43.74     35.605    46.001    79.823    38.907    73.82     83.109    40.46     50.338    78.61     39.571    
+MOT17-10-FRCNN                     39.396    43.74     35.605    46.001    79.823    38.907    73.82     83.109    40.46     50.338    78.61     39.571    
+MOT17-10-SDP                       39.396    43.74     35.605    46.001    79.823    38.907    73.82     83.109    40.46     50.338    78.61     39.571    
+MOT17-11-DPM                       61.083    66.192    56.461    70.264    86.736    60.829    86.816    88.749    62.985    71.492    86.081    61.541    
+MOT17-11-FRCNN                     61.083    66.192    56.461    70.264    86.736    60.829    86.816    88.749    62.985    71.492    86.081    61.541    
+MOT17-11-SDP                       61.083    66.192    56.461    70.264    86.736    60.829    86.816    88.749    62.985    71.492    86.081    61.541    
+MOT17-13-DPM                       43.645    36.28     52.709    37.801    80.001    56.399    78.154    83.148    44.615    54.7      78.887    43.151    
+MOT17-13-FRCNN                     43.645    36.28     52.709    37.801    80.001    56.399    78.154    83.148    44.615    54.7      78.887    43.151    
+MOT17-13-SDP                       43.645    36.28     52.709    37.801    80.001    56.399    78.154    83.148    44.615    54.7      78.887    43.151    
+COMBINED                           57.106    56.586    58.156    61.363    81.763    62.846    84.338    86.444    59.641    70.6      80.762    57.018    
+
+CLEAR: bytetrack-pedestrian        MOTA      MOTP      MODA      CLR_Re    CLR_Pr    MTR       PTR       MLR       sMOTA     CLR_TP    CLR_FN    CLR_FP    IDSW      MT        PT        ML        Frag      
+MOT17-02-DPM                       44.933    84.366    45.38     46.429    97.79     19.355    40.323    40.323    37.674    8627      9954      195       83        12        25        25        121       
+MOT17-02-FRCNN                     44.933    84.366    45.38     46.429    97.79     19.355    40.323    40.323    37.674    8627      9954      195       83        12        25        25        121       
+MOT17-02-SDP                       44.933    84.366    45.38     46.429    97.79     19.355    40.323    40.323    37.674    8627      9954      195       83        12        25        25        121       
+MOT17-04-DPM                       68.286    87.344    68.413    81.708    86.005    56.627    26.506    16.867    57.946    38858     8699      6323      60        47        22        14        135       
+MOT17-04-FRCNN                     68.286    87.344    68.413    81.708    86.005    56.627    26.506    16.867    57.946    38858     8699      6323      60        47        22        14        135       
+MOT17-04-SDP                       68.286    87.344    68.413    81.708    86.005    56.627    26.506    16.867    57.946    38858     8699      6323      60        47        22        14        135       
+MOT17-05-DPM                       64.537    82.165    65.896    72.025    92.157    29.323    54.887    15.789    51.691    4982      1935      424       94        39        73        21        109       
+MOT17-05-FRCNN                     64.537    82.165    65.896    72.025    92.157    29.323    54.887    15.789    51.691    4982      1935      424       94        39        73        21        109       
+MOT17-05-SDP                       64.537    82.165    65.896    72.025    92.157    29.323    54.887    15.789    51.691    4982      1935      424       94        39        73        21        109       
+MOT17-09-DPM                       75.249    85.955    76.056    78.648    96.81     53.846    42.308    3.8462    64.202    4188      1137      138       43        14        11        1         57        
+MOT17-09-FRCNN                     75.249    85.955    76.056    78.648    96.81     53.846    42.308    3.8462    64.202    4188      1137      138       43        14        11        1         57        
+MOT17-09-SDP                       75.249    85.955    76.056    78.648    96.81     53.846    42.308    3.8462    64.202    4188      1137      138       43        14        11        1         57        
+MOT17-10-DPM                       52.465    80.873    53.112    55.37     96.081    26.316    38.596    35.088    41.875    7109      5730      290       83        15        22        20        166       
+MOT17-10-FRCNN                     52.465    80.873    53.112    55.37     96.081    26.316    38.596    35.088    41.875    7109      5730      290       83        15        22        20        166       
+MOT17-10-SDP                       52.465    80.873    53.112    55.37     96.081    26.316    38.596    35.088    41.875    7109      5730      290       83        15        22        20        166       
+MOT17-11-DPM                       73.198    87.779    73.591    77.3      95.421    44        34.667    21.333    63.751    7294      2142      350       37        33        26        16        55        
+MOT17-11-FRCNN                     73.198    87.779    73.591    77.3      95.421    44        34.667    21.333    63.751    7294      2142      350       37        33        26        16        55        
+MOT17-11-SDP                       73.198    87.779    73.591    77.3      95.421    44        34.667    21.333    63.751    7294      2142      350       37        33        26        16        55        
+MOT17-13-DPM                       42.501    80.933    43.094    45.173    95.601    21.818    34.545    43.636    33.888    5259      6383      242       69        24        38        48        113       
+MOT17-13-FRCNN                     42.501    80.933    43.094    45.173    95.601    21.818    34.545    43.636    33.888    5259      6383      242       69        24        38        48        113       
+MOT17-13-SDP                       42.501    80.933    43.094    45.173    95.601    21.818    34.545    43.636    33.888    5259      6383      242       69        24        38        48        113       
+COMBINED                           60.452    85.59     60.87     67.96     90.553    33.7      39.744    26.557    50.659    228951    107940    23886     1407      552       651       435       2268      
+
+Count: bytetrack-pedestrian        Dets      GT_Dets   IDs       GT_IDs    
+MOT17-02-DPM                       8822      18581     106       62        
+MOT17-02-FRCNN                     8822      18581     106       62        
+MOT17-02-SDP                       8822      18581     106       62        
+MOT17-04-DPM                       45181     47557     142       83        
+MOT17-04-FRCNN                     45181     47557     142       83        
+MOT17-04-SDP                       45181     47557     142       83        
+MOT17-05-DPM                       5406      6917      163       133       
+MOT17-05-FRCNN                     5406      6917      163       133       
+MOT17-05-SDP                       5406      6917      163       133       
+MOT17-09-DPM                       4326      5325      48        26        
+MOT17-09-FRCNN                     4326      5325      48        26        
+MOT17-09-SDP                       4326      5325      48        26        
+MOT17-10-DPM                       7399      12839     96        57        
+MOT17-10-FRCNN                     7399      12839     96        57        
+MOT17-10-SDP                       7399      12839     96        57        
+MOT17-11-DPM                       7644      9436      90        75        
+MOT17-11-FRCNN                     7644      9436      90        75        
+MOT17-11-SDP                       7644      9436      90        75        
+MOT17-13-DPM                       5501      11642     103       110       
+MOT17-13-FRCNN                     5501      11642     103       110       
+MOT17-13-SDP                       5501      11642     103       110       
+COMBINED                           252837    336891    2244      1638      
+
+Evaluating botsort
+
+    MotChallenge2DBox.get_raw_seq_data(botsort, MOT17-02-DPM)              0.2431 sec
+    MotChallenge2DBox.get_preprocessed_seq_data(pedestrian)                0.2174 sec
+    HOTA.eval_sequence()                                                   0.2674 sec
+    CLEAR.eval_sequence()                                                  0.0292 sec
+    Count.eval_sequence()                                                  0.0000 sec
+22 eval_sequence(MOT17-02-DPM, botsort)                                   0.7593 sec
+    MotChallenge2DBox.get_raw_seq_data(botsort, MOT17-02-FRCNN)            0.2090 sec
+    MotChallenge2DBox.get_preprocessed_seq_data(pedestrian)                0.1911 sec
+    HOTA.eval_sequence()                                                   0.2041 sec
+    CLEAR.eval_sequence()                                                  0.0289 sec
+    Count.eval_sequence()                                                  0.0000 sec
+23 eval_sequence(MOT17-02-FRCNN, botsort)                                 0.6356 sec
+    MotChallenge2DBox.get_raw_seq_data(botsort, MOT17-02-SDP)              0.2003 sec
+    MotChallenge2DBox.get_preprocessed_seq_data(pedestrian)                0.1682 sec
+    HOTA.eval_sequence()                                                   0.1975 sec
+    CLEAR.eval_sequence()                                                  0.0268 sec
+    Count.eval_sequence()                                                  0.0000 sec
+24 eval_sequence(MOT17-02-SDP, botsort)                                   0.5952 sec
+    MotChallenge2DBox.get_raw_seq_data(botsort, MOT17-04-DPM)              0.8486 sec
+    MotChallenge2DBox.get_preprocessed_seq_data(pedestrian)                0.3804 sec
+    HOTA.eval_sequence()                                                   0.3679 sec
+    CLEAR.eval_sequence()                                                  0.0733 sec
+    Count.eval_sequence()                                                  0.0000 sec
+25 eval_sequence(MOT17-04-DPM, botsort)                                   1.6742 sec
+    MotChallenge2DBox.get_raw_seq_data(botsort, MOT17-04-FRCNN)            0.8823 sec
+    MotChallenge2DBox.get_preprocessed_seq_data(pedestrian)                0.3191 sec
+    HOTA.eval_sequence()                                                   0.4723 sec
+    CLEAR.eval_sequence()                                                  0.0870 sec
+    Count.eval_sequence()                                                  0.0000 sec
+26 eval_sequence(MOT17-04-FRCNN, botsort)                                 1.7654 sec
+    MotChallenge2DBox.get_raw_seq_data(botsort, MOT17-04-SDP)              0.9513 sec
+    MotChallenge2DBox.get_preprocessed_seq_data(pedestrian)                0.3802 sec
+    HOTA.eval_sequence()                                                   0.3930 sec
+    CLEAR.eval_sequence()                                                  0.0713 sec
+    Count.eval_sequence()                                                  0.0000 sec
+27 eval_sequence(MOT17-04-SDP, botsort)                                   1.8012 sec
+    MotChallenge2DBox.get_raw_seq_data(botsort, MOT17-05-DPM)              0.0990 sec
+    MotChallenge2DBox.get_preprocessed_seq_data(pedestrian)                0.1961 sec
+    HOTA.eval_sequence()                                                   0.2556 sec
+    CLEAR.eval_sequence()                                                  0.0379 sec
+    Count.eval_sequence()                                                  0.0000 sec
+28 eval_sequence(MOT17-05-DPM, botsort)                                   0.5923 sec
+    MotChallenge2DBox.get_raw_seq_data(botsort, MOT17-05-FRCNN)            0.1108 sec
+    MotChallenge2DBox.get_preprocessed_seq_data(pedestrian)                0.2399 sec
+    HOTA.eval_sequence()                                                   0.2037 sec
+    CLEAR.eval_sequence()                                                  0.0311 sec
+    Count.eval_sequence()                                                  0.0000 sec
+29 eval_sequence(MOT17-05-FRCNN, botsort)                                 0.5879 sec
+    MotChallenge2DBox.get_raw_seq_data(botsort, MOT17-05-SDP)              0.1400 sec
+    MotChallenge2DBox.get_preprocessed_seq_data(pedestrian)                0.2110 sec
+    HOTA.eval_sequence()                                                   0.3126 sec
+    CLEAR.eval_sequence()                                                  0.0491 sec
+    Count.eval_sequence()                                                  0.0000 sec
+30 eval_sequence(MOT17-05-SDP, botsort)                                   0.7155 sec
+    MotChallenge2DBox.get_raw_seq_data(botsort, MOT17-09-DPM)              0.1041 sec
+    MotChallenge2DBox.get_preprocessed_seq_data(pedestrian)                0.1708 sec
+    HOTA.eval_sequence()                                                   0.1406 sec
+    CLEAR.eval_sequence()                                                  0.0192 sec
+    Count.eval_sequence()                                                  0.0000 sec
+31 eval_sequence(MOT17-09-DPM, botsort)                                   0.4367 sec
+    MotChallenge2DBox.get_raw_seq_data(botsort, MOT17-09-FRCNN)            0.0779 sec
+    MotChallenge2DBox.get_preprocessed_seq_data(pedestrian)                0.1338 sec
+    HOTA.eval_sequence()                                                   0.1399 sec
+    CLEAR.eval_sequence()                                                  0.0190 sec
+    Count.eval_sequence()                                                  0.0000 sec
+32 eval_sequence(MOT17-09-FRCNN, botsort)                                 0.3734 sec
+    MotChallenge2DBox.get_raw_seq_data(botsort, MOT17-09-SDP)              0.0861 sec
+    MotChallenge2DBox.get_preprocessed_seq_data(pedestrian)                0.1435 sec
+    HOTA.eval_sequence()                                                   0.1403 sec
+    CLEAR.eval_sequence()                                                  0.0204 sec
+    Count.eval_sequence()                                                  0.0000 sec
+33 eval_sequence(MOT17-09-SDP, botsort)                                   0.3925 sec
+    MotChallenge2DBox.get_raw_seq_data(botsort, MOT17-10-DPM)              0.1306 sec
+    MotChallenge2DBox.get_preprocessed_seq_data(pedestrian)                0.1877 sec
+    HOTA.eval_sequence()                                                   0.1807 sec
+    CLEAR.eval_sequence()                                                  0.0309 sec
+    Count.eval_sequence()                                                  0.0000 sec
+34 eval_sequence(MOT17-10-DPM, botsort)                                   0.5326 sec
+    MotChallenge2DBox.get_raw_seq_data(botsort, MOT17-10-FRCNN)            0.1596 sec
+    MotChallenge2DBox.get_preprocessed_seq_data(pedestrian)                0.1740 sec
+    HOTA.eval_sequence()                                                   0.1902 sec
+    CLEAR.eval_sequence()                                                  0.0285 sec
+    Count.eval_sequence()                                                  0.0000 sec
+35 eval_sequence(MOT17-10-FRCNN, botsort)                                 0.5559 sec
+    MotChallenge2DBox.get_raw_seq_data(botsort, MOT17-10-SDP)              0.1339 sec
+    MotChallenge2DBox.get_preprocessed_seq_data(pedestrian)                0.1749 sec
+    HOTA.eval_sequence()                                                   0.1852 sec
+    CLEAR.eval_sequence()                                                  0.0284 sec
+    Count.eval_sequence()                                                  0.0000 sec
+36 eval_sequence(MOT17-10-SDP, botsort)                                   0.5250 sec
+    MotChallenge2DBox.get_raw_seq_data(botsort, MOT17-11-DPM)              0.1185 sec
+    MotChallenge2DBox.get_preprocessed_seq_data(pedestrian)                0.2298 sec
+    HOTA.eval_sequence()                                                   0.3062 sec
+    CLEAR.eval_sequence()                                                  0.0367 sec
+    Count.eval_sequence()                                                  0.0000 sec
+37 eval_sequence(MOT17-11-DPM, botsort)                                   0.6942 sec
+    MotChallenge2DBox.get_raw_seq_data(botsort, MOT17-11-FRCNN)            0.1400 sec
+    MotChallenge2DBox.get_preprocessed_seq_data(pedestrian)                0.2501 sec
+    HOTA.eval_sequence()                                                   0.2380 sec
+    CLEAR.eval_sequence()                                                  0.0473 sec
+    Count.eval_sequence()                                                  0.0000 sec
+38 eval_sequence(MOT17-11-FRCNN, botsort)                                 0.6784 sec
+    MotChallenge2DBox.get_raw_seq_data(botsort, MOT17-11-SDP)              0.1387 sec
+    MotChallenge2DBox.get_preprocessed_seq_data(pedestrian)                0.2254 sec
+    HOTA.eval_sequence()                                                   0.2403 sec
+    CLEAR.eval_sequence()                                                  0.0365 sec
+    Count.eval_sequence()                                                  0.0000 sec
+39 eval_sequence(MOT17-11-SDP, botsort)                                   0.6437 sec
+    MotChallenge2DBox.get_raw_seq_data(botsort, MOT17-13-DPM)              0.1571 sec
+    MotChallenge2DBox.get_preprocessed_seq_data(pedestrian)                0.2050 sec
+    HOTA.eval_sequence()                                                   0.1919 sec
+    CLEAR.eval_sequence()                                                  0.0289 sec
+    Count.eval_sequence()                                                  0.0000 sec
+40 eval_sequence(MOT17-13-DPM, botsort)                                   0.5859 sec
+    MotChallenge2DBox.get_raw_seq_data(botsort, MOT17-13-FRCNN)            0.1593 sec
+    MotChallenge2DBox.get_preprocessed_seq_data(pedestrian)                0.1901 sec
+    HOTA.eval_sequence()                                                   0.2032 sec
+    CLEAR.eval_sequence()                                                  0.0311 sec
+    Count.eval_sequence()                                                  0.0000 sec
+41 eval_sequence(MOT17-13-FRCNN, botsort)                                 0.5870 sec
+    MotChallenge2DBox.get_raw_seq_data(botsort, MOT17-13-SDP)              0.1415 sec
+    MotChallenge2DBox.get_preprocessed_seq_data(pedestrian)                0.2120 sec
+    HOTA.eval_sequence()                                                   0.1987 sec
+    CLEAR.eval_sequence()                                                  0.0291 sec
+    Count.eval_sequence()                                                  0.0000 sec
+42 eval_sequence(MOT17-13-SDP, botsort)                                   0.5843 sec
+
+All sequences for botsort finished in 15.72 seconds
+
+HOTA: botsort-pedestrian           HOTA      DetA      AssA      DetRe     DetPr     AssRe     AssPr     LocA      OWTA      HOTA(0)   LocA(0)   HOTALocA(0)
+MOT17-02-DPM                       40.641    39.644    42.125    40.988    86.055    43.94     86.934    87.323    41.429    46.111    84.72     39.065    
+MOT17-02-FRCNN                     40.641    39.644    42.125    40.988    86.055    43.94     86.934    87.323    41.429    46.111    84.72     39.065    
+MOT17-02-SDP                       40.641    39.644    42.125    40.988    86.055    43.94     86.934    87.323    41.429    46.111    84.72     39.065    
+MOT17-04-DPM                       68.621    68.485    69.253    77.037    81.086    73.763    87.422    87.464    72.989    86.265    80.124    69.119    
+MOT17-04-FRCNN                     68.621    68.485    69.253    77.037    81.086    73.763    87.422    87.464    72.989    86.265    80.124    69.119    
+MOT17-04-SDP                       68.621    68.485    69.253    77.037    81.086    73.763    87.422    87.464    72.989    86.265    80.124    69.119    
+MOT17-05-DPM                       55.549    59.09     52.432    63.799    80.69     58.004    79.883    84.997    57.815    69.021    80.614    55.641    
+MOT17-05-FRCNN                     55.549    59.09     52.432    63.799    80.69     58.004    79.883    84.997    57.815    69.021    80.614    55.641    
+MOT17-05-SDP                       55.549    59.09     52.432    63.799    80.69     58.004    79.883    84.997    57.815    69.021    80.614    55.641    
+MOT17-09-DPM                       51.694    67.889    39.434    71.175    87.794    51.572    74.181    88.525    52.978    60.007    86.118    51.677    
+MOT17-09-FRCNN                     51.694    67.889    39.434    71.175    87.794    51.572    74.181    88.525    52.978    60.007    86.118    51.677    
+MOT17-09-SDP                       51.694    67.889    39.434    71.175    87.794    51.572    74.181    88.525    52.978    60.007    86.118    51.677    
+MOT17-10-DPM                       42.482    45.671    39.609    47.819    81.361    43.66     75.221    83.863    43.517    53.155    80.144    42.601    
+MOT17-10-FRCNN                     42.482    45.671    39.609    47.819    81.361    43.66     75.221    83.863    43.517    53.155    80.144    42.601    
+MOT17-10-SDP                       42.482    45.671    39.609    47.819    81.361    43.66     75.221    83.863    43.517    53.155    80.144    42.601    
+MOT17-11-DPM                       62.782    67.629    58.365    71.628    87.926    62.774    88.091    89.691    64.657    72.255    87.352    63.116    
+MOT17-11-FRCNN                     62.782    67.629    58.365    71.628    87.926    62.774    88.091    89.691    64.657    72.255    87.352    63.116    
+MOT17-11-SDP                       62.782    67.629    58.365    71.628    87.926    62.774    88.091    89.691    64.657    72.255    87.352    63.116    
+MOT17-13-DPM                       46.8      38.458    57.134    40.138    81.055    60.82     81.686    84.006    47.872    58.044    79.971    46.418    
+MOT17-13-FRCNN                     46.8      38.458    57.134    40.138    81.055    60.82     81.686    84.006    47.872    58.044    79.971    46.418    
+MOT17-13-SDP                       46.8      38.458    57.134    40.138    81.055    60.82     81.686    84.006    47.872    58.044    79.971    46.418    
+COMBINED                           58.317    57.599    59.498    62.358    82.563    64.143    85.272    86.988    60.838    71.295    81.585    58.166    
+
+CLEAR: botsort-pedestrian          MOTA      MOTP      MODA      CLR_Re    CLR_Pr    MTR       PTR       MLR       sMOTA     CLR_TP    CLR_FN    CLR_FP    IDSW      MT        PT        ML        Frag      
+MOT17-02-DPM                       45.439    85.521    45.875    46.752    98.158    17.742    41.935    40.323    38.67     8687      9894      163       81        11        26        25        119       
+MOT17-02-FRCNN                     45.439    85.521    45.875    46.752    98.158    17.742    41.935    40.323    38.67     8687      9894      163       81        11        26        25        119       
+MOT17-02-SDP                       45.439    85.521    45.875    46.752    98.158    17.742    41.935    40.323    38.67     8687      9894      163       81        11        26        25        119       
+MOT17-04-DPM                       68.932    87.505    69.05     82.028    86.34     59.036    24.096    16.867    58.683    39010     8547      6172      56        49        20        14        138       
+MOT17-04-FRCNN                     68.932    87.505    69.05     82.028    86.34     59.036    24.096    16.867    58.683    39010     8547      6172      56        49        20        14        138       
+MOT17-04-SDP                       68.932    87.505    69.05     82.028    86.34     59.036    24.096    16.867    58.683    39010     8547      6172      56        49        20        14        138       
+MOT17-05-DPM                       67.5      83.368    68.368    73.717    93.235    33.835    51.88     14.286    55.24     5099      1818      370       60        45        69        19        98        
+MOT17-05-FRCNN                     67.5      83.368    68.368    73.717    93.235    33.835    51.88     14.286    55.24     5099      1818      370       60        45        69        19        98        
+MOT17-05-SDP                       67.5      83.368    68.368    73.717    93.235    33.835    51.88     14.286    55.24     5099      1818      370       60        45        69        19        98        
+MOT17-09-DPM                       75.549    87.347    76.376    78.723    97.104    53.846    42.308    3.8462    65.589    4192      1133      125       44        14        11        1         56        
+MOT17-09-FRCNN                     75.549    87.347    76.376    78.723    97.104    53.846    42.308    3.8462    65.589    4192      1133      125       44        14        11        1         56        
+MOT17-09-SDP                       75.549    87.347    76.376    78.723    97.104    53.846    42.308    3.8462    65.589    4192      1133      125       44        14        11        1         56        
+MOT17-10-DPM                       54.202    81.461    54.615    56.694    96.462    26.316    45.614    28.07     43.692    7279      5560      267       53        15        26        16        161       
+MOT17-10-FRCNN                     54.202    81.461    54.615    56.694    96.462    26.316    45.614    28.07     43.692    7279      5560      267       53        15        26        16        161       
+MOT17-10-SDP                       54.202    81.461    54.615    56.694    96.462    26.316    45.614    28.07     43.692    7279      5560      267       53        15        26        16        161       
+MOT17-11-DPM                       73.93     88.911    74.195    77.83     95.538    44        34.667    21.333    65.299    7344      2092      343       25        33        26        16        46        
+MOT17-11-FRCNN                     73.93     88.911    74.195    77.83     95.538    44        34.667    21.333    65.299    7344      2092      343       25        33        26        16        46        
+MOT17-11-SDP                       73.93     88.911    74.195    77.83     95.538    44        34.667    21.333    65.299    7344      2092      343       25        33        26        16        46        
+MOT17-13-DPM                       45.611    81.799    46.066    47.792    96.513    28.182    29.091    42.727    36.912    5564      6078      201       53        31        32        47        108       
+MOT17-13-FRCNN                     45.611    81.799    46.066    47.792    96.513    28.182    29.091    42.727    36.912    5564      6078      201       53        31        32        47        108       
+MOT17-13-SDP                       45.611    81.799    46.066    47.792    96.513    28.182    29.091    42.727    36.912    5564      6078      201       53        31        32        47        108       
+COMBINED                           61.588    86.152    61.92     68.724    90.991    36.264    38.462    25.275    52.072    231525    105366    22923     1116      594       630       414       2178      
+
+Count: botsort-pedestrian          Dets      GT_Dets   IDs       GT_IDs    
+MOT17-02-DPM                       8850      18581     105       62        
+MOT17-02-FRCNN                     8850      18581     105       62        
+MOT17-02-SDP                       8850      18581     105       62        
+MOT17-04-DPM                       45182     47557     142       83        
+MOT17-04-FRCNN                     45182     47557     142       83        
+MOT17-04-SDP                       45182     47557     142       83        
+MOT17-05-DPM                       5469      6917      159       133       
+MOT17-05-FRCNN                     5469      6917      159       133       
+MOT17-05-SDP                       5469      6917      159       133       
+MOT17-09-DPM                       4317      5325      47        26        
+MOT17-09-FRCNN                     4317      5325      47        26        
+MOT17-09-SDP                       4317      5325      47        26        
+MOT17-10-DPM                       7546      12839     80        57        
+MOT17-10-FRCNN                     7546      12839     80        57        
+MOT17-10-SDP                       7546      12839     80        57        
+MOT17-11-DPM                       7687      9436      83        75        
+MOT17-11-FRCNN                     7687      9436      83        75        
+MOT17-11-SDP                       7687      9436      83        75        
+MOT17-13-DPM                       5765      11642     97        110       
+MOT17-13-FRCNN                     5765      11642     97        110       
+MOT17-13-SDP                       5765      11642     97        110       
+COMBINED                           254448    336891    2139      1638      
+
+Timing analysis:
+MotChallenge2DBox.get_raw_seq_data                                     9.8907 sec
+MotChallenge2DBox.get_preprocessed_seq_data                            9.1172 sec
+HOTA.eval_sequence                                                     9.8896 sec
+CLEAR.eval_sequence                                                    1.5603 sec
+Count.eval_sequence                                                    0.0001 sec
+eval_sequence                                                          30.5751 sec
+Evaluator.evaluate                                                     31.6619 sec
