@@ -78,11 +78,12 @@ This project is licensed under the [MIT License] - see the [LICENSE](LICENSE) fi
   - Move in the project root and type: python trackers/test_track.py 
   - If you want, you can choose a lot o settings. Just for example: python trackers/test_track.py --source data/video_prisco_tagliato.mp4 --save-id-crops --save-mot
 
-test_my_yolo_class is a simple class that tests che correctness of MyYOLO class with the usage of our custom tracker mode.
 To change parameters of you favourite tracker mode, you can easily change theese in config/<your tracker mode>
 
 ## Performance Evaluation
 The performances of BotSort and ByteTrack have been evaluated with various parameter values on the Mot17 dataset using the metrics HOTA, CLEAR, and Count.
+
+Before doing that, please setup your environment following the section "Quickly evaluate on supported benchmarks" in [Readme.md](./TrackEval/Readme.md)
 
 To obtain the tracking results on Mot17, you need to run the following command in the terminal:
 
@@ -95,12 +96,13 @@ To evaluate the performances, navigate to the TrackEval folder:
     python scripts/run_mot_challenge.py
 ```
 
+## Training PAR Module
+
+python ./attributes_recognition_module/train_PAR.py --reduced
+
 
 ## Project
 
 - How to run the Project
 python app/group07.py --video data/video_atrio_cues/video2.mp4 --configuration config.json --results results/video_atrio_cues/video2.json
 
-## Training
-
-python ./attributes_recognition_module/train_PAR.py --reduced

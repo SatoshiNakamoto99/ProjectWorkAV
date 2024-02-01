@@ -21,7 +21,6 @@ class ClassificationModule(nn.Module):
     x = F.relu(self.fc3(x))
     x = self.dropout(x)
     x = F.relu(self.fc4(x))
-    #print(" Stampa Gigi "+str(self.fc4.parameters()))
     if self.num_classes == 1:
       return torch.sigmoid(x) # output: num_classes
     else:
