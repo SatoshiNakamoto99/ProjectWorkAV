@@ -6,7 +6,6 @@ CrowdHuman
 __pycache__
 /myenv
 data/trackers
-model
 results/
 datasets
 test_color.py
@@ -20,11 +19,11 @@ venv
 dataset
 validation_set_reduced
 inference_results
-MultiTaskNN_ConvNeXt_v1_CBAM.pth
 par_dataset
 base_pipeline.py
 output.mp4
 yolov8n-seg.pt
 test_colors_on_PAR_dataset
 models
+/attributes_recognition_module/model/*.pth
 data/colors
