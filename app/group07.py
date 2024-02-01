@@ -23,6 +23,16 @@
 #python app/group07.py --video data/video_atrio_cues/video23.mp4 --configuration config.txt --results results/video_atrio_cues/video23.txt
 #python app/group07.py --video data/video_atrio_cues/video24.mp4 --configuration config.txt --results results/video_atrio_cues/video24.txt
 
+#python app/group07.py --video data/colors/black.mp4 --configuration config.txt --results results/colors/black.txt
+#python app/group07.py --video data/colors/blue.mp4 --configuration config.txt --results results/colors/blue.txt
+#python app/group07.py --video data/colors/brown_purple.mp4 --configuration config.txt --results results/colors/brown_purple.txt
+#python app/group07.py --video data/colors/gray.mp4 --configuration config.txt --results results/colors/gray.txt
+#python app/group07.py --video data/colors/green.mp4 --configuration config.txt --results results/colors/green.txt
+#python app/group07.py --video data/colors/pink.mp4 --configuration config.txt --results results/colors/pink.txt
+#python app/group07.py --video data/colors/red.mp4 --configuration config.txt --results results/colors/red.txt
+#python app/group07.py --video data/colors/white.mp4 --configuration config.txt --results results/colors/white.txt
+#python app/group07.py --video data/colors/yellow.mp4 --configuration config.txt --results results/colors/yellow.txt
+
 
 import argparse
 from tracking import ObjectTracker

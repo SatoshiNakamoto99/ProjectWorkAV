@@ -27,3 +27,4 @@ output.mp4
 yolov8n-seg.pt
 test_colors_on_PAR_dataset
 models
+data/colors
