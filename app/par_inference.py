@@ -72,7 +72,7 @@ class PARModuleInference():
         self.labels_dict = LabelDict()
         
         # self.data_transforms = transforms.Compose([transforms.Resize((144,90)), transforms.ToTensor()])
-        self.data_transforms = transforms.Compose([transforms.Resize((192,64)), transforms.ToTensor()])
+        self.data_transforms = transforms.Compose([transforms.Resize((96,288)), transforms.ToTensor()])
         
         # Initialize model
         convnext_version = "v1"

@@ -42,8 +42,8 @@ if __name__ == '__main__':
         train_img_dir = "attributes_recognition_module\\par_dataset\\training_set\\"
         validation_img_dir = "attributes_recognition_module\\par_dataset\\validation_set\\"
 
-    data_transforms_val = transforms.Compose([transforms.Resize((64,192)), transforms.ToTensor()])
-    data_trasfporms_train = transforms.Compose([transforms.Resize((64,192)), transforms.ToTensor()])
+    data_transforms_val = transforms.Compose([transforms.Resize((96,288)), transforms.ToTensor()])
+    data_trasfporms_train = transforms.Compose([transforms.Resize((96,288)), transforms.ToTensor()])
     # Load the dataset if do you want to see the output of the dataset saved  you casn use verbose=True
    
    
@@ -85,7 +85,7 @@ if __name__ == '__main__':
     weight_decay = 1e-2
     num_epochs = 64
     model_name = "MultiTaskNN_ConvNeXt_"+ convnext_version+"_"+am_type
-    exp_name = model_name+"_lr_"+str(start_lr)+"_wd_"+str(weight_decay)+"_epochs_"+str(num_epochs)+"_batch_size_"+str(batch_size)+"_v1_64_192_final"
+    exp_name = model_name+"_lr_"+str(start_lr)+"_wd_"+str(weight_decay)+"_epochs_"+str(num_epochs)+"_batch_size_"+str(batch_size)+"_v1_96_288_Analitics"
     model_dir = "models/"+exp_name+"/"
     create_path(model_dir)
     model_save_path = model_dir + model_name + ".pth"
