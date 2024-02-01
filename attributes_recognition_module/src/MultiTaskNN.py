@@ -44,27 +44,27 @@ class MultiTaskNN(nn.Module):
         self.classification_module_hat = ClassificationModule(dim, 2)
         
         gamma_positive_upper = torch.tensor([0,0,0,0,0,0,0,0,0,0,0]).to(device)
-        gamma_negative_upper = torch.tensor([1,2,4,2,4,4,4,4,2,2,4]).to(device)
+        gamma_negative_upper = torch.tensor([1,1,1,1,1,1,1,1,1,1,1]).to(device)
         self.upper_color_loss = ASLLoss(num_classes = 11, gamma_positive = gamma_positive_upper, gamma_negative = gamma_negative_upper)
 
 
         gamma_positive_lower = torch.tensor([0,0,0,0,0,0,0,0,0,0,0]).to(device)
-        gamma_negative_lower = torch.tensor([1,2,4,2,4,4,4,4,4,4,4]).to(device)
+        gamma_negative_lower = torch.tensor([1,1,1,1,1,1,1,1,1,1,1]).to(device)
         self.lower_color_loss = ASLLoss(num_classes = 11, gamma_positive = gamma_positive_lower, gamma_negative = gamma_negative_lower)
 
         #self.gender_loss = ASLLoss(num_classes=1, gamma_positive=0, gamma_negative=1)
         #self.bag_loss = ASLLoss(num_classes=1, gamma_positive=0, gamma_negative=1)
         #self.hat_loss = ASLLoss(num_classes=1, gamma_positive=0, gamma_negative=1)
         gamma_positive_gender = torch.tensor([0,0]).to(device)
-        gamma_negative_gender = torch.tensor([1,2]).to(device)
+        gamma_negative_gender = torch.tensor([1,3]).to(device)
         self.gender_loss = ASLLoss(num_classes = 2, gamma_positive=gamma_positive_gender, gamma_negative=gamma_negative_gender)
 
         gamma_positive_bag = torch.tensor([0,0]).to(device)
-        gamma_negative_bag = torch.tensor([1,2]).to(device)
+        gamma_negative_bag = torch.tensor([1,4]).to(device)
         self.bag_loss = ASLLoss(num_classes = 2, gamma_positive=gamma_positive_bag, gamma_negative=gamma_negative_bag)
 
         gamma_positive_hat = torch.tensor([0,0]).to(device)
-        gamma_negative_hat = torch.tensor([1,2]).to(device)
+        gamma_negative_hat = torch.tensor([1,4]).to(device)
         self.hat_loss = ASLLoss(num_classes = 2, gamma_positive=gamma_positive_hat, gamma_negative=gamma_negative_hat)
         
         self.weights = torch.nn.Parameter(torch.ones(5).float())
