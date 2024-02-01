@@ -340,7 +340,7 @@ class ObjectTracker:
         # fino a quando non si ha la predizione ufficiale
         if people[track_id]["num_frames"] >= 2 and people[track_id]["num_frames"] <= self.FRAME_THRESHOLD:
             # cv.rectangle(tracking_annotated_frame, (x-10,y), (x+10,y+50), WHITE, -1)
-            attributes_string = " Gender: " 
+            attributes_string = " id: " +  str(track_id) + "\n Gender: " 
             attributes_string = attributes_string + 'M' if people[track_id]["gender"] == 'male' else attributes_string + 'F'
             attributes_string = attributes_string +  "\n bag: " + people[track_id]["bag"] + "\n hat: " + people[track_id]["hat"] + "\n U-L: " + people[track_id]["upper_color"] + "-" + people[track_id]["lower_color"]    
             y0 = y
@@ -360,7 +360,7 @@ class ObjectTracker:
             
             # cv.rectangle(tracking_annotated_frame, (x-10,y), (x+10,y+50), WHITE, -1)
             # cv.putText(tracking_annotated_frame, str(track_id) , (x+10,y+10), fontFace=cv.FONT_HERSHEY_SIMPLEX, fontScale=0.3, color=BLACK, thickness=1)
-            attributes_string = " Gender: " 
+            attributes_string = " id: " +  str(track_id) + "\n Gender: " 
             attributes_string = attributes_string + 'M' if people[track_id]["gender"] == 'male' else attributes_string + 'F'
             attributes_string = attributes_string +  "\n bag: " + people[track_id]["bag"] + "\n hat: " + people[track_id]["hat"] + "\n U-L: " + people[track_id]["upper_color"] + "-" + people[track_id]["lower_color"]    
             y0 = y
