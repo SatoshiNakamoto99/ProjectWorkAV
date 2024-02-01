@@ -46,7 +46,7 @@ class ObjectTracker:
         shutil.rmtree(folder_path, ignore_errors=True)
         self.par_results = {}
         self.final_par_results = {}
-        self.FRAME_THRESHOLD = 21
+        self.FRAME_THRESHOLD = 27
         self.FRAME_DETECTION = 3
         
 
@@ -130,6 +130,7 @@ class ObjectTracker:
                             # Disegna il bounding box con il colore appropriato
                             color = self.colors[roi]
                             cv.rectangle(tracking_annotated_frame, (int(x - w / 2), int(y - h / 2)), (int(x + w / 2), int(y + h / 2)), color, 2)
+                            
                             
                             self.actual_detected_person = frame[ int(y-h/2):int(y+h/2),
                                             int(x-w/2):int(x+w/2) ] 
@@ -339,7 +340,14 @@ class ObjectTracker:
     def put_informations(self, tracking_annotated_frame, people, track_id, color, x,y,w,h):
         # fino a quando non si ha la predizione ufficiale
         if people[track_id]["num_frames"] >= 2 and people[track_id]["num_frames"] <= self.FRAME_THRESHOLD:
-            # cv.rectangle(tracking_annotated_frame, (x-10,y), (x+10,y+50), WHITE, -1)
+            # cv.rectangle(tracking_annotated_frame, (x-10,y), (x+10,y+50), (0,255,0), -1)
+            # cv.rectangle(tracking_annotated_frame, (a,y), (b,c), (0,255,0), -1)
+            # cv.rectangle(tracking_annotated_frame, (50,100), (100,150), (0,255,0), -1)
+            cv.rectangle(tracking_annotated_frame,(int(x + w/2 -10),int(y + h/2 - 10)), (int(x+ w/2 + 100),int(y + h/2 + 30)), WHITE, -1) # per gli attributi
+            cv.rectangle(tracking_annotated_frame,(int(x - w/2 ),int(y - h/2)), (int(x - w/2 + 30),int(y - h/2 + 40)), WHITE, -1) # per gli id
+            cv.putText(tracking_annotated_frame, str(track_id), (int(x - w/2),int(y - h/2 + 30)), fontFace=cv.FONT_HERSHEY_SIMPLEX, fontScale=0.8, color=color, thickness=2)
+            
+            cv.rectangle(tracking_annotated_frame,(int(x + w/2 -10),int(y + h/2 - 10)), (int(x+ w/2 + 100),int(y + h/2 + 30)), (255,0,0), -1)
             attributes_string = " Gender: " 
             attributes_string = attributes_string + 'M' if people[track_id]["gender"] == 'male' else attributes_string + 'F'
             attributes_string = attributes_string +  "\n bag: " + people[track_id]["bag"] + "\n hat: " + people[track_id]["hat"] + "\n U-L: " + people[track_id]["upper_color"] + "-" + people[track_id]["lower_color"]    
@@ -358,8 +366,9 @@ class ObjectTracker:
             people[track_id]["upper_color"] = self.final_par_results[track_id]["upper_color"]
             people[track_id]["lower_color"] = self.final_par_results[track_id]["lower_color"]
             
-            # cv.rectangle(tracking_annotated_frame, (x-10,y), (x+10,y+50), WHITE, -1)
-            # cv.putText(tracking_annotated_frame, str(track_id) , (x+10,y+10), fontFace=cv.FONT_HERSHEY_SIMPLEX, fontScale=0.3, color=BLACK, thickness=1)
+            cv.rectangle(tracking_annotated_frame,(int(x + w/2 -10),int(y + h/2 - 10)), (int(x+ w/2 + 100),int(y + h/2 + 30)), WHITE, -1) # per gli attributi
+            cv.rectangle(tracking_annotated_frame,(int(x - w/2 ),int(y - h/2)), (int(x - w/2 + 30),int(y - h/2 + 40)), WHITE, -1) # per gli id
+            cv.putText(tracking_annotated_frame, str(track_id), (int(x - w/2),int(y - h/2 + 30)), fontFace=cv.FONT_HERSHEY_SIMPLEX, fontScale=0.8, color=color, thickness=2)
             attributes_string = " Gender: " 
             attributes_string = attributes_string + 'M' if people[track_id]["gender"] == 'male' else attributes_string + 'F'
             attributes_string = attributes_string +  "\n bag: " + people[track_id]["bag"] + "\n hat: " + people[track_id]["hat"] + "\n U-L: " + people[track_id]["upper_color"] + "-" + people[track_id]["lower_color"]    
