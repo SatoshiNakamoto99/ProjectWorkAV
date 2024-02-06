@@ -345,19 +345,21 @@ class ObjectTracker:
             # cv.rectangle(tracking_annotated_frame, (a,y), (b,c), (0,255,0), -1)
             # cv.rectangle(tracking_annotated_frame, (50,100), (100,150), (0,255,0), -1)
             # cv.rectangle(tracking_annotated_frame,(int(x + w/2 -10),int(y + h/2 - 10)), (int(x+ w/2 + 100),int(y + h/2 + 40)), WHITE, -1) # per gli attributi
-            cv.rectangle(tracking_annotated_frame,(int(x + w/2 -10),int(y + h/2 - 10)), (int(x+ w/2 + 100),int(y + h/2 + 40)), GRAY, -1) # per gli attributi
+            cv.rectangle(tracking_annotated_frame,(int(x - w/2 -10),int(y + h/2)), (int(x + w/2 + 10),int(y + h/2 + 40)), WHITE, -1) # per gli attributi
             cv.rectangle(tracking_annotated_frame,(int(x - w/2 ),int(y - h/2)), (int(x - w/2 + 30),int(y - h/2 + 30)), WHITE, -1) # per gli id
             cv.putText(tracking_annotated_frame, str(track_id), (int(x - w/2),int(y - h/2 + 30)), fontFace=cv.FONT_HERSHEY_SIMPLEX, fontScale=0.8, color=color, thickness=2)
             
             
             attributes_string = " Gender: " 
             attributes_string = attributes_string + 'M' if people[track_id]["gender"] == 'male' else attributes_string + 'F'
-            attributes_string = attributes_string +  "\n bag: " + people[track_id]["bag"] + "\n hat: " + people[track_id]["hat"] + "\n U-L: " + people[track_id]["upper_color"] + "-" + people[track_id]["lower_color"]    
+            attributes_string = attributes_string + '\n Bag ' if people[track_id]["bag"] == 'true' else attributes_string + '\n No Bag '
+            attributes_string = attributes_string + '  Hat' if people[track_id]["hat"] == 'true' else attributes_string + '  No Hat' 
+            attributes_string = attributes_string + "\n U-L: " + people[track_id]["upper_color"] + "-" + people[track_id]["lower_color"]    
             y0 = y
             dy = 10
             for i, line in enumerate(attributes_string.split('\n')):
                 y = y0 + i*dy
-                cv.putText(tracking_annotated_frame, line, (int(x+w/2), int(y+h/2)), fontFace=cv.FONT_HERSHEY_SIMPLEX, fontScale=0.3, color=BLACK, thickness=1)
+                cv.putText(tracking_annotated_frame, line, (int(x-w/2-10), int(y+h/2+10)), fontFace=cv.FONT_HERSHEY_SIMPLEX, fontScale=0.3, color=BLACK, thickness=1)
             
         # quando si ha predizione ufficiale
         if people[track_id]["num_frames"] == self.FRAME_THRESHOLD + 1:
@@ -368,17 +370,20 @@ class ObjectTracker:
             people[track_id]["upper_color"] = self.final_par_results[track_id]["upper_color"]
             people[track_id]["lower_color"] = self.final_par_results[track_id]["lower_color"]
             
-            cv.rectangle(tracking_annotated_frame,(int(x + w/2 -10),int(y + h/2 - 10)), (int(x+ w/2 + 100),int(y + h/2 + 40)), WHITE, -1) # per gli attributi
+            cv.rectangle(tracking_annotated_frame,(int(x - w/2 - 10),int(y + h/2)), (int(x + w/2 + 10),int(y + h/2 + 40)), WHITE, -1) # per gli attributi
             cv.rectangle(tracking_annotated_frame,(int(x - w/2 ),int(y - h/2)), (int(x - w/2 + 30),int(y - h/2 + 30)), WHITE, -1) # per gli id
             cv.putText(tracking_annotated_frame, str(track_id), (int(x - w/2),int(y - h/2 + 30)), fontFace=cv.FONT_HERSHEY_SIMPLEX, fontScale=0.8, color=color, thickness=2)
+            
             attributes_string = " Gender: " 
             attributes_string = attributes_string + 'M' if people[track_id]["gender"] == 'male' else attributes_string + 'F'
-            attributes_string = attributes_string +  "\n bag: " + people[track_id]["bag"] + "\n hat: " + people[track_id]["hat"] + "\n U-L: " + people[track_id]["upper_color"] + "-" + people[track_id]["lower_color"]    
+            attributes_string = attributes_string + '\n Bag ' if people[track_id]["bag"] == 'true' else attributes_string + '\n No Bag '
+            attributes_string = attributes_string + '  Hat' if people[track_id]["hat"] == 'true' else attributes_string + '  No Hat' 
+            attributes_string = attributes_string + "\n U-L: " + people[track_id]["upper_color"] + "-" + people[track_id]["lower_color"]  
             y0 = y
             dy = 10
             for i, line in enumerate(attributes_string.split('\n')):
                 y = y0 + i*dy
-                cv.putText(tracking_annotated_frame, line, (int(x+w/2), int(y+h/2)), fontFace=cv.FONT_HERSHEY_SIMPLEX, fontScale=0.3, color=BLACK, thickness=1)
+                cv.putText(tracking_annotated_frame, line, (int(x-w/2-10), int(y+h/2+10)), fontFace=cv.FONT_HERSHEY_SIMPLEX, fontScale=0.3, color=BLACK, thickness=1)
         
 
 
