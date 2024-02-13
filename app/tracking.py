@@ -47,8 +47,8 @@ class ObjectTracker:
         shutil.rmtree(folder_path, ignore_errors=True)
         self.par_results = {}
         self.final_par_results = {}
-        self.FRAME_THRESHOLD = 27
-        self.FRAME_DETECTION = 3
+        self.FRAME_THRESHOLD = 49
+        self.FRAME_DETECTION = 7
         
 
     # Gets the rescaled Regions of Interest (ROIs) from the video based on a configuration JSON file
@@ -76,8 +76,8 @@ class ObjectTracker:
                 # Riscalare le coordinate e le dimensioni relative a valori assoluti
                 relative_x = roi["x"]
                 relative_y = roi["y"]
-                relative_w = roi["w"]
-                relative_h = roi["h"]
+                relative_w = roi["width"]
+                relative_h = roi["height"]
 
                 if(relative_x+relative_w > 1):
                     relative_w = 1-relative_x
@@ -246,11 +246,11 @@ class ObjectTracker:
                 
             ### make first prediciton for showing something on screen the first time
             temp_par_results = self.par_module.prediction(self.actual_detected_person)
-            people[track_id]["gender"] = temp_par_results["gender"]
-            people[track_id]["hat"] = temp_par_results["hat"]
-            people[track_id]["bag"] = temp_par_results["bag"]
-            people[track_id]["upper_color"] = temp_par_results["upper_color"]
-            people[track_id]["lower_color"] = temp_par_results["lower_color"]
+            people[track_id]["gender"] = temp_par_results["gender"][0]
+            people[track_id]["hat"] = temp_par_results["hat"][0]
+            people[track_id]["bag"] = temp_par_results["bag"][0]
+            people[track_id]["upper_color"] = temp_par_results["upper_color"][0]
+            people[track_id]["lower_color"] = temp_par_results["lower_color"][0]
             
 
         else:
@@ -309,8 +309,32 @@ class ObjectTracker:
         people[track_id]["prev_roi"] = roi
         people[track_id]["lost_tracking"]=False
 
-    def most_common(self, lst):
-        return max(set(lst), key=lst.count)
+    def most_common(self, lst, confidence_threshold=0.95):
+        # Filtra le predizioni sotto il threshold di confidenza
+        filtered_predictions = [(value, confidence) for value, confidence in lst if confidence >= confidence_threshold]
+        # Se non ci sono predizioni sopra il threshold, restituisci None o un valore di default a tua scelta
+        if not filtered_predictions:
+            confidence_threshold= confidence_threshold - 0.05
+            if confidence_threshold < 0.5:
+                return 'unknown'
+            return self.most_common(lst, confidence_threshold)
+
+        # Crea un dizionario per memorizzare le confidenze per ogni valore
+        confidence_dict = {}
+
+        # Riempi il dizionario con i valori e le rispettive liste di confidenze
+        for value, confidence in filtered_predictions:
+            if value not in confidence_dict:
+                confidence_dict[value] = []
+            confidence_dict[value].append(confidence)
+
+        # Calcola la media delle confidenze per ogni valore
+        average_confidences = {value: sum(confidences) / len(confidences) for value, confidences in confidence_dict.items()}
+
+        # se il valore più ricorrente in lst ha con confidenza maggiore di 0.95 restituiscilo
+        # Trova il valore con la media più alta
+        most_common_value = max(average_confidences, key=average_confidences.get)
+        return most_common_value
 
     # performs majority voting for multiple prediction from parmodule for a single person with his own track_id
     def majority_voting(self,track_id):
@@ -345,7 +369,7 @@ class ObjectTracker:
             # cv.rectangle(tracking_annotated_frame, (a,y), (b,c), (0,255,0), -1)
             # cv.rectangle(tracking_annotated_frame, (50,100), (100,150), (0,255,0), -1)
             # cv.rectangle(tracking_annotated_frame,(int(x + w/2 -10),int(y + h/2 - 10)), (int(x+ w/2 + 100),int(y + h/2 + 40)), WHITE, -1) # per gli attributi
-            cv.rectangle(tracking_annotated_frame,(int(x - w/2 -10),int(y + h/2)), (int(x + w/2 + 10),int(y + h/2 + 40)), WHITE, -1) # per gli attributi
+            cv.rectangle(tracking_annotated_frame,(int(x - w/2 - 10),int(y + h/2)), (int(x - w/2 + 90),int(y + h/2 + 40)), WHITE, -1) # per gli attributi
             cv.rectangle(tracking_annotated_frame,(int(x - w/2 ),int(y - h/2)), (int(x - w/2 + 30),int(y - h/2 + 30)), WHITE, -1) # per gli id
             cv.putText(tracking_annotated_frame, str(track_id), (int(x - w/2),int(y - h/2 + 30)), fontFace=cv.FONT_HERSHEY_SIMPLEX, fontScale=0.8, color=color, thickness=2)
             
@@ -370,7 +394,7 @@ class ObjectTracker:
             people[track_id]["upper_color"] = self.final_par_results[track_id]["upper_color"]
             people[track_id]["lower_color"] = self.final_par_results[track_id]["lower_color"]
             
-            cv.rectangle(tracking_annotated_frame,(int(x - w/2 - 10),int(y + h/2)), (int(x + w/2 + 10),int(y + h/2 + 40)), WHITE, -1) # per gli attributi
+            cv.rectangle(tracking_annotated_frame,(int(x - w/2 - 10),int(y + h/2)), (int(x - w/2 + 90),int(y + h/2 + 40)), WHITE, -1) # per gli attributi
             cv.rectangle(tracking_annotated_frame,(int(x - w/2 ),int(y - h/2)), (int(x - w/2 + 30),int(y - h/2 + 30)), WHITE, -1) # per gli id
             cv.putText(tracking_annotated_frame, str(track_id), (int(x - w/2),int(y - h/2 + 30)), fontFace=cv.FONT_HERSHEY_SIMPLEX, fontScale=0.8, color=color, thickness=2)
             

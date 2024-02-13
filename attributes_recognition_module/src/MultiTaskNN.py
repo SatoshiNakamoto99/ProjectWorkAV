@@ -56,15 +56,15 @@ class MultiTaskNN(nn.Module):
         #self.bag_loss = ASLLoss(num_classes=1, gamma_positive=0, gamma_negative=1)
         #self.hat_loss = ASLLoss(num_classes=1, gamma_positive=0, gamma_negative=1)
         gamma_positive_gender = torch.tensor([0,0]).to(device)
-        gamma_negative_gender = torch.tensor([1,3]).to(device)
+        gamma_negative_gender = torch.tensor([1,2]).to(device)
         self.gender_loss = ASLLoss(num_classes = 2, gamma_positive=gamma_positive_gender, gamma_negative=gamma_negative_gender)
 
         gamma_positive_bag = torch.tensor([0,0]).to(device)
-        gamma_negative_bag = torch.tensor([1,4]).to(device)
+        gamma_negative_bag = torch.tensor([1,2]).to(device)
         self.bag_loss = ASLLoss(num_classes = 2, gamma_positive=gamma_positive_bag, gamma_negative=gamma_negative_bag)
 
         gamma_positive_hat = torch.tensor([0,0]).to(device)
-        gamma_negative_hat = torch.tensor([1,4]).to(device)
+        gamma_negative_hat = torch.tensor([1,2]).to(device)
         self.hat_loss = ASLLoss(num_classes = 2, gamma_positive=gamma_positive_hat, gamma_negative=gamma_negative_hat)
         
         self.weights = torch.nn.Parameter(torch.ones(5).float())

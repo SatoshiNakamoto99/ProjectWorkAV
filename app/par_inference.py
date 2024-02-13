@@ -92,27 +92,32 @@ class PARModuleInference():
         
         preds_upper_color, preds_lower_color, preds_gender, preds_bag, preds_hat = preds
         
+        uc_confidence = torch.max(preds_upper_color).item()
         uc_index = torch.argmax(preds_upper_color).item()
         uc_string = self.labels_dict["upper_color"][uc_index]
         
+        lc_confidence = torch.max(preds_lower_color).item()
         lc_index = torch.argmax(preds_lower_color).item()
         lc_string = self.labels_dict["lower_color"][lc_index]
         
+        gender_confidence= torch.max(preds_gender).item()
         gender_index = torch.argmax(preds_gender).item()
         gender_string = self.labels_dict["gender"][gender_index]
         
+        bag_confidence = torch.max(preds_bag).item()
         bag_index = torch.argmax(preds_bag).item()
         bag_string = self.labels_dict["bag"][bag_index]
         
+        hat_confidence = torch.max(preds_hat).item()
         hat_index = torch.argmax(preds_hat).item()
         hat_string = self.labels_dict["hat"][hat_index]
         
         # write in results dict
-        results["upper_color"] = uc_string
-        results["lower_color"] = lc_string
-        results["gender"] = gender_string
-        results["bag"] = bag_string
-        results["hat"] = hat_string
+        results["upper_color"] = [uc_string, uc_confidence]
+        results["lower_color"] = [lc_string, lc_confidence]
+        results["gender"] = [gender_string, gender_confidence]
+        results["bag"] = [bag_string, bag_confidence]
+        results["hat"] = [hat_string, hat_confidence]
         
         return results
      
