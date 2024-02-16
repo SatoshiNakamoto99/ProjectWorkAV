@@ -44,12 +44,12 @@ class MultiTaskNN(nn.Module):
         self.classification_module_hat = ClassificationModule(dim, 2)
         
         gamma_positive_upper = torch.tensor([0,0,0,0,0,0,0,0,0,0,0]).to(device)
-        gamma_negative_upper = torch.tensor([1,1,1,1,1,1,1,1,1,1,1]).to(device)
+        gamma_negative_upper = torch.tensor([1,2,4,2,4,4,4,4,2,2,4]).to(device)
         self.upper_color_loss = ASLLoss(num_classes = 11, gamma_positive = gamma_positive_upper, gamma_negative = gamma_negative_upper)
 
 
         gamma_positive_lower = torch.tensor([0,0,0,0,0,0,0,0,0,0,0]).to(device)
-        gamma_negative_lower = torch.tensor([1,1,1,1,1,1,1,1,1,1,1]).to(device)
+        gamma_negative_lower = torch.tensor([1,2,4,2,4,4,4,4,4,4,4]).to(device)
         self.lower_color_loss = ASLLoss(num_classes = 11, gamma_positive = gamma_positive_lower, gamma_negative = gamma_negative_lower)
 
         #self.gender_loss = ASLLoss(num_classes=1, gamma_positive=0, gamma_negative=1)

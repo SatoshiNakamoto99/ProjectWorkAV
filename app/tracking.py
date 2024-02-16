@@ -47,8 +47,8 @@ class ObjectTracker:
         shutil.rmtree(folder_path, ignore_errors=True)
         self.par_results = {}
         self.final_par_results = {}
-        self.FRAME_THRESHOLD = 49
-        self.FRAME_DETECTION = 7
+        self.FRAME_THRESHOLD = 70
+        self.FRAME_DETECTION = 10
         
 
     # Gets the rescaled Regions of Interest (ROIs) from the video based on a configuration JSON file
@@ -104,14 +104,14 @@ class ObjectTracker:
 
         frame_id = 0
         # Create a video stream loader
-        stream_loader = LoadVideoStream(source=self.video_path, fps_out=5)
+        stream_loader = LoadVideoStream(source=self.video_path, fps_out=10)
 
 
         try:
             for _, images, _, _ in stream_loader:
                 for frame, timestamp in images:
 
-                    tracking_results = self.tracking_model.track(frame, persist=True, conf=0.3, classes=[0], device='cpu', tracker="config/botsort.yaml")
+                    tracking_results = self.tracking_model.track(frame, persist=True, conf=0.5, classes=[0], device='cpu', tracker="config/botsort.yaml")
 
                     frame_id = frame_id+1
 

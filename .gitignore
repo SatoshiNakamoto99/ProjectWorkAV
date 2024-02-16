@@ -27,3 +27,4 @@ test_colors_on_PAR_dataset
 models
 /attributes_recognition_module/model/*.pth
 data/colors
+data/video_atrio_cues
