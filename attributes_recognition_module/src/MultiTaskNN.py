@@ -74,26 +74,28 @@ class MultiTaskNN(nn.Module):
     def forward(self, x):
         x = self.feature_extraction_module(x)
         #add dimentsio to x
-        x = x.unsqueeze(2).unsqueeze(3)
+        #x = x.unsqueeze(2).unsqueeze(3)
         
         upper_color_nn = self.attention_module_upper_color(x)
         lower_color_nn = self.attention_module_lower_color(x)
         gender_nn = self.attention_module_gender(x) 
         bag_nn = self.attention_module_bag(x)
         hat_nn = self.attention_module_hat(x)
+
+        # global average pooling, (N, C, H, W) -> (N, C)
+        upper_color_nn = upper_color_nn.mean([-2, -1])
+        lower_color_nn = lower_color_nn.mean([-2, -1])
+        gender_nn = gender_nn.mean([-2, -1])
+        bag_nn = bag_nn.mean([-2, -1])
+        hat_nn = hat_nn.mean([-2, -1])
         
-        upper_color_flatten = upper_color_nn.view(x.size(0), -1)
-        lower_color_flatten = lower_color_nn.view(x.size(0), -1)
-        gender_flatten = gender_nn.view(x.size(0), -1)
-        bag_flatten = bag_nn.view(x.size(0), -1)
-        hat_flatten = hat_nn.view(x.size(0), -1)
-        
-        upper_color = self.classification_module_upper_color(upper_color_flatten)
-        lower_color = self.classification_module_lower_color(lower_color_flatten)
-        gender = self.classification_module_gender(gender_flatten)
-        bag = self.classification_module_bag(bag_flatten)
-        hat = self.classification_module_hat(hat_flatten)
-        
+        # Classification
+        upper_color = self.classification_module_upper_color(upper_color_nn)
+        lower_color = self.classification_module_lower_color(lower_color_nn)
+        gender = self.classification_module_gender(gender_nn)
+        bag = self.classification_module_bag(bag_nn)
+        hat = self.classification_module_hat(hat_nn) 
+       
         return upper_color, lower_color, gender, bag, hat
         
     def compute_loss(self, y_pred, y_true):

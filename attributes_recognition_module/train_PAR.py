@@ -50,7 +50,7 @@ if __name__ == '__main__':
     train_dataset = CustomImageDataset(train_annotation_file, train_img_dir, data_trasfporms_train)
     val_dataset = CustomImageDataset(validation_annotation_file, validation_img_dir, data_transforms_val)
     
-    batch_size = 64
+    batch_size = 128
 
     if (opt.reduced == True):
         train_dataloader = DataLoader(train_dataset, batch_size=batch_size, shuffle=True)
@@ -77,7 +77,7 @@ if __name__ == '__main__':
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
     #device = torch.device('cpu') # for index cuda debugging
     model = MultiTaskNN(1024, convnext_version, am_type, device).to(device)
-
+    #model = MultiTaskNN(27648, convnext_version, am_type, device).to(device)
 
     # Initialize Trainer
     start_lr = 1e-4
@@ -85,7 +85,7 @@ if __name__ == '__main__':
     weight_decay = 1e-2
     num_epochs = 64
     model_name = "MultiTaskNN_ConvNeXt_"+ convnext_version+"_"+am_type
-    exp_name = model_name+"_lr_"+str(start_lr)+"_wd_"+str(weight_decay)+"_epochs_"+str(num_epochs)+"_batch_size_"+str(batch_size)+"_v1_96_288_Analitics"
+    exp_name = model_name+"_lr_"+str(start_lr)+"_wd_"+str(weight_decay)+"_epochs_"+str(num_epochs)+"_batch_size_"+str(batch_size)+"_v1_96_288_final"
     model_dir = "models/"+exp_name+"/"
     create_path(model_dir)
     model_save_path = model_dir + model_name + ".pth"

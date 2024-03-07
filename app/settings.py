@@ -13,7 +13,7 @@ ROOT = root_path.relative_to(Path.cwd())
 # ML Model config
 MODEL_DIR = './models'
 DETECTION_MODEL = Path(MODEL_DIR) / 'best_Kfod5_100epoc_base.pt'
-PAR_MODEL = Path("attributes_recognition_module/model/MultiTaskNN_ConvNeXt_v1_CBAM_96_288_relazione.pth")
+PAR_MODEL = Path("attributes_recognition_module/model/MultiTaskNN_ConvNeXt_v1_CBAM_after_exam.pth")
 
 
 # TRACKING
