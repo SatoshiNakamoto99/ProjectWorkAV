@@ -8,7 +8,7 @@ The software is designed to handle videos with a resolution of 1920x1080, record
 ## Getting Started 🚀
 Instructions on how to get a copy of the project up and running on your local machine.
 
-### Featurs 🎯
+### Features 🎯
 - **Human Detection:** Identifies and localizes humans within images or video frames.
 - **Human Tracking:** Tracks detected humans across multiple frames to maintain their identity.
 - **Evaluation Pedestrian Attribute:** This feature involves the analysis and recognition of specific attributes associated with each detected pedestrian. These attributes can include gender, presence of a bag or hat, and clothing colors. The system is designed to accurately identify and evaluate these attributes in real-time.
@@ -48,11 +48,6 @@ Note that if you don't have a GPU you can install a version fo CPU.
 ## Usage 📖
 Instructions on how to use the project or its features are described in [Prepare_dataset.md](./docs/prepare_dataset.md) and [QuickStart.md](./docs/dashboard.md)
 
-  Inserisco solo  il comando per provare da interfaccia web inferenza real time per la detection da video webcam e immagini, il codice è rozzo:
-
-```bash
-    streamlit run ./app/app.py 
-```
 
 ## Contributing 🤝
 Contributions are welcome! Feel free to fork the repository, make improvements, and submit pull requests. Please follow the Contributing Guidelines.
@@ -97,12 +92,15 @@ To evaluate the performances, navigate to the TrackEval folder:
 ```
 
 ## Training PAR Module
-
+```
 python ./attributes_recognition_module/train_PAR.py --reduced
+```
 
 
 ## Project
 
 - How to run the Project
+```
 python app/group07.py --video data/video_atrio_cues/video2.mp4 --configuration config.json --results results/video_atrio_cues/video2.json
+```
 
